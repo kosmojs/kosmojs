@@ -1,0 +1,246 @@
+#!/usr/bin/env -S node --enable-source-maps --no-warnings=ExperimentalWarning
+
+import { basename, resolve } from "node:path";
+import { parseArgs, styleText } from "node:util";
+
+import fsx from "fs-extra";
+import prompts, { type PromptObject } from "prompts";
+
+import kosmoFactory from "./factory";
+
+const onState: PromptObject["onState"] = (state) => {
+  if (state.aborted) {
+    process.nextTick(() => process.exit(1));
+  }
+};
+
+const cwd = process.cwd();
+
+const validateNameIdentifier = (name: string) => {
+  if (/[^\w.@$+-]/.test(name)) {
+    return "May contain only alphanumerics, hyphens, periods or any of @ $ +";
+  }
+  return true;
+};
+
+const halt = (error: string) => {
+  if (error) {
+    console.log();
+    console.error(`${styleText("red", "ERROR")}: ${error}`);
+  }
+  process.exit(1);
+};
+
+const usage = [
+  "",
+  `${styleText("blue", "npx create kosmo")} ➜ Create a new Project (or a new Source Folder if inside app dir)`,
+  `${styleText("blue", "npx create kosmo")} ${styleText("magenta", "-h | --help")} ➜ Print this message and exit`,
+  "",
+];
+
+const printUsage = () => {
+  for (const line of usage) {
+    console.log(line);
+  }
+};
+
+const input = parseArgs({
+  options: {
+    help: {
+      type: "boolean",
+      short: "h",
+    },
+  },
+});
+
+if (input.values.help) {
+  printUsage();
+  process.exit(0);
+}
+
+const packageFile = resolve(cwd, "package.json");
+const packageFileExists = await fsx.exists(packageFile);
+
+const packageJson = packageFileExists
+  ? await import(packageFile, { with: { type: "json" } }).then((e) => e.default)
+  : undefined;
+
+const viteBaseExists = await fsx.exists(resolve(cwd, "vite.base.ts"));
+const tsconfigExists = await fsx.exists(resolve(cwd, "tsconfig.json"));
+
+const NODE_VERSION = "22";
+
+const depsInstallCmds = ["npm install", "pnpm install", "yarn install"];
+
+if (viteBaseExists && tsconfigExists && packageJson?.distDir) {
+  const { createSourceFolder } = await kosmoFactory(resolve(cwd, ".."), {
+    NODE_VERSION,
+  });
+
+  // Current directory appears to be a valid KosmoJS app,
+  // prompting user to create a new source folder...
+  console.log(
+    styleText(
+      ["bold", "green"],
+      "➜ You are about to create a new Source Folder...",
+    ),
+  );
+
+  const folder = await prompts<"name" | "framework" | "baseurl" | "port">([
+    {
+      type: "text",
+      name: "name",
+      message: "Folder Name",
+      onState,
+      validate(name) {
+        if (!name?.length) {
+          return "Please insert folder name";
+        }
+        return validateNameIdentifier(name);
+      },
+    },
+
+    {
+      type: "select",
+      name: "framework",
+      message: "Frontend Framework",
+      onState,
+      choices: [
+        { title: "None", value: { name: "none" } },
+        { title: "SolidJS", value: { name: "solid" } },
+        { title: "React", value: { name: "react" } },
+      ],
+    },
+
+    {
+      type: "text",
+      name: "baseurl",
+      message: "Base URL",
+      initial: "/",
+      onState,
+      validate(base: string) {
+        if (!base?.startsWith("/")) {
+          return "Should start with a slash";
+        }
+        if (/[^\w./-]/.test(base)) {
+          return "May contain only alphanumerics, hyphens, periods or slashes";
+        }
+        if (/\.\.\//.test(base) || /\/\.\//.test(base)) {
+          return "Should not contain path traversal patterns";
+        }
+        return true;
+      },
+    },
+
+    {
+      type: "number",
+      name: "port",
+      message: "Dev Server Port",
+      initial: 4000,
+      onState,
+    },
+  ]);
+
+  try {
+    await createSourceFolder(
+      {
+        name: basename(cwd),
+        distDir: packageJson.distDir,
+      },
+      folder,
+    );
+  } catch (
+    // biome-ignore lint: any
+    error: any
+  ) {
+    halt(error.message);
+  }
+
+  const sourceFolderHeadline: string =
+    {
+      solid: `${styleText("cyan", "SolidJS")} Source Folder`,
+      react: `${styleText("magenta", "React")} Source Folder`,
+    }[folder.framework.name as string] || "Source Folder";
+
+  for (const line of [
+    "",
+    `💫 Congrats! Your app just leveled up with a new ${sourceFolderHeadline}`,
+    "",
+
+    "Now install any new dependencies that may have been added:",
+    ...depsInstallCmds.map((cmd) => `$ ${styleText("blue", cmd)}`),
+    "",
+
+    "🚀 Once dependencies are installed, start the dev server:",
+    `$ ${styleText("blue", `pnpm dev ${folder.name}`)}`,
+    "",
+
+    "📘 Docs: https://kosmojs.dev",
+    "",
+  ]) {
+    console.log(`  ${line}`);
+  }
+} else {
+  const { createApp } = await kosmoFactory(cwd, {
+    NODE_VERSION,
+  });
+
+  // Prompting user to create a new KosmoJS app...
+  const app = await prompts<"name" | "distDir">([
+    {
+      type: "text",
+      name: "name",
+      message: "Project Name",
+      onState,
+      validate(name) {
+        if (!name?.length) {
+          return "Please insert app name";
+        }
+        return validateNameIdentifier(name);
+      },
+    },
+
+    {
+      type: "text",
+      name: "distDir",
+      message: "Dist Folder",
+      initial: ".dist",
+      onState,
+      validate(folderName) {
+        if (!folderName?.length) {
+          return "Please insert dist folder name";
+        }
+        return validateNameIdentifier(folderName);
+      },
+    },
+  ]);
+
+  try {
+    await createApp(app);
+  } catch (
+    // biome-ignore lint: any
+    error: any
+  ) {
+    halt(error.message);
+  }
+
+  for (const line of [
+    "",
+    "✨ Well Done! Your new KosmoJS app is ready.",
+    `────────────────────────────────────────────`,
+    "",
+
+    `Next steps:`,
+    `➜ Navigate to your app dir:`,
+    `$ ${styleText("blue", `cd ./${app.name}`)}`,
+    "",
+    `➜ Add a Source Folder:`,
+    `$ ${styleText("blue", "npx create kosmo")}`,
+    "",
+
+    "📘 Docs: https://kosmojs.dev",
+    "",
+  ]) {
+    console.log(`  ${line}`);
+  }
+}
