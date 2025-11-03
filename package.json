@@ -30,17 +30,21 @@
     "@kosmojs/config": "workspace:^",
     "@kosmojs/dev": "workspace:^",
     "@kosmojs/devlib": "workspace:^",
-    "@kosmojs/esbuilder": "workspace:^",
     "@types/node": "^24.9.2",
+    "esbuild": "^0.25.11",
+    "esbuilder": "./esbuilder",
     "execa": "^9.6.0",
     "jsdom": "^27.1.0",
     "kosmojs": "workspace:^",
     "msw": "^2.11.6",
+    "ora": "^9.0.0",
     "playwright": "^1.56.1",
     "resolve-tspaths": "^0.8.23",
     "rimraf": "^6.1.0",
+    "tinyglobby": "^0.2.15",
     "typescript": "^5.9.3",
     "vite": "^7.1.12",
-    "vitest": "^4.0.6"
+    "vitest": "^4.0.6",
+    "workspace-root": "^3.3.1"
   }
 }
