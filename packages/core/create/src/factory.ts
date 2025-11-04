@@ -167,7 +167,11 @@ export default async (
       with: { type: "json" },
     }).then((e) => e.default);
 
-    const compilerOptions = { ...tsconfigImport?.compilerOptions };
+    const compilerOptions = {
+      ...tsconfigImport?.compilerOptions,
+      // instruct TypeScript to preserve JSX
+      jsx: "preserve",
+    };
 
     const plugins: Array<Plugin> = [];
     const generators: Array<Generator> = [];
@@ -200,7 +204,6 @@ export default async (
       });
 
       compilerOptions.jsxImportSource = "solid-js";
-      compilerOptions.jsx = "preserve";
     } else if (folder.framework.name === "react") {
       Object.assign(dependencies, {
         react: deps.react,
@@ -228,7 +231,7 @@ export default async (
           : "",
       });
 
-      compilerOptions.jsx = "react-jsx";
+      compilerOptions.jsxImportSource = "react";
     }
 
     const context = {
