@@ -162,10 +162,10 @@ export type GeneratorFactory<T = undefined> = T extends undefined
 export type GeneratorConstructor = {
   /*
    * Used on core built-in generators to distinguish them from user-defined ones.
-   * Core generators always run first, before any user generators.
+   * api/fetch generators always run first, ssr always run last.
    * User generators run in the order they were added.
    * */
-  kind?: "api" | "fetch";
+  kind?: "api" | "fetch" | "ssr";
 
   name: string;
 
