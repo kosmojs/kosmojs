@@ -204,7 +204,7 @@ if (viteBaseExists && tsconfigExists && packageJson?.distDir) {
       type: "text",
       name: "distDir",
       message: "Dist Folder",
-      initial: ".dist",
+      initial: "dist",
       onState,
       validate(folderName) {
         if (!folderName?.length) {
