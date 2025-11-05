@@ -1,4 +1,5 @@
 import type { ResolvedType } from "tsuit";
+import type { ResolvedConfig } from "vite";
 
 export type PluginOptions = {
   generators?: Array<GeneratorConstructor>;
@@ -17,6 +18,7 @@ export type PluginOptionsResolved = {
   appRoot: string;
   sourceFolder: string;
   outDir: string;
+  command: ResolvedConfig["command"];
   generators: Array<GeneratorConstructor>;
   formatters: Array<Formatter>;
   refineTypeName: string;
