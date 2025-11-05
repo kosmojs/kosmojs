@@ -1,4 +1,4 @@
-# ϰ KosmoJS
+# KosmoJS
 
 ### Structured Vite Template for building type-safe full-stack apps
 

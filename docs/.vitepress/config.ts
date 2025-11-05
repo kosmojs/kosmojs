@@ -11,7 +11,7 @@ const icons = {
 
 export default defineConfig({
   lang: "en-US",
-  title: "ϰ KosmoJS",
+  title: "KosmoJS",
   lastUpdated: true,
 
   sitemap: {
