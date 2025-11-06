@@ -1,3 +1,5 @@
+import type { IncomingMessage, ServerResponse } from "node:http";
+
 import type { ResolvedType } from "tsuit";
 import type { ResolvedConfig } from "vite";
 
@@ -201,3 +203,35 @@ export type FormatterConstructor<
   moduleConfig: ModuleConfig;
   formatter: Formatter;
 };
+
+export type SSRStringReturn = {
+  head?: string;
+  html: string;
+};
+
+export type SSRString = () => SSRStringReturn | Promise<SSRStringReturn>;
+
+export type SSRStream = (
+  req: IncomingMessage,
+  res: ServerResponse,
+  opt: {
+    template: string;
+    manifest: Record<
+      string,
+      {
+        file: string;
+        css?: Array<string>;
+        assets?: Array<string>;
+      }
+    >;
+  },
+) => void | Promise<void>;
+
+export type SSRFactorySignature = {
+  renderToString?: SSRString;
+  renderToStream?: SSRStream;
+};
+
+export type SSRFactory = (
+  url: string,
+) => SSRFactorySignature | Promise<SSRFactorySignature>;
