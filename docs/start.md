@@ -22,7 +22,7 @@ Run the following command to create a new `KosmoJS` application:
 npx kosmojs
 ```
 
-You'll be asked for an app name (required) and a dist directory (optional, defaults to `.dist`).
+You'll be asked for an app name (required) and a dist directory (optional, defaults to `dist`).
 This creates a folder with your app name containing a Vite project ready for multiple source folders.
 
 ## 2: Create a Source Folder

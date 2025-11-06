@@ -30,14 +30,14 @@ When you run `pnpm build`, `KosmoJS` produces:
 - Chunked and tree-shaken for minimal size
 
 **API server:**
-- Bundled Node.js application at `.dist/SOURCE_FOLDER/api/index.js`
+- Bundled Node.js application at `dist/SOURCE_FOLDER/api/index.js`
 - All routes, middleware, and dependencies bundled together
 - Ready to run with Node.js
 
 ## 📂 Build Output Structure
 
 ```
-.dist/
+dist/
 └── @front/
     ├── api/
     │   └── index.js          # Bundled API server
@@ -49,10 +49,10 @@ When you run `pnpm build`, `KosmoJS` produces:
 
 ## 🚀 Running the Production Build
 
-Deploy the `.dist/SOURCE_FOLDER` directory and run:
+Deploy the `dist/SOURCE_FOLDER` directory and run:
 
 ```bash
-node .dist/@front/api/index.js
+node dist/@front/api/index.js
 ```
 
 The API server is a standard Node.js ESM module. Deploy it to any Node.js environment -
@@ -66,7 +66,7 @@ You can build all folders at once by simply omitting the source folder name:
 pnpm build
 ```
 
-This builds all your source folders sequentially, placing assets in the `.dist` directory.
+This builds all your source folders sequentially, placing assets in the `dist` directory.
 
 ## ⚙️ Build Configuration
 
@@ -100,11 +100,11 @@ Deploy each source folder to its own environment:
 ```sh
 # Deploy customer app
 pnpm build @front
-deploy .dist/@front → app.example.com
+deploy dist/@front → app.example.com
 
 # Deploy admin panel
 pnpm build @admin
-deploy .dist/@admin → admin.example.com
+deploy dist/@admin → admin.example.com
 ```
 
 **Benefits:**
@@ -121,7 +121,7 @@ Deploy all source folders to the same server with different base URLs:
 pnpm build
 
 # Deploy to single server
-deploy .dist/ → example.com
+deploy dist/ → example.com
 ```
 
 Configure nginx/caddy to route:
@@ -147,7 +147,7 @@ The standard Node.js output ensures portability across platforms.
 
 ```bash
 pnpm build @front
-node .dist/@front/api/index.js -p 3000
+node dist/@front/api/index.js -p 3000
 # Test at localhost:3000
 ```
 
@@ -173,7 +173,7 @@ Source maps help debug production errors but increase bundle size slightly. Cons
 
 ```sh
 pnpm build @front
-# Check .dist/@front/api/index.js size
+# Check dist/@front/api/index.js size
 ```
 
 If the bundle grows significantly, review dependencies and consider marking some as external.
