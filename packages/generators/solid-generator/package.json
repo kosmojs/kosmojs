@@ -1,0 +1,40 @@
+{
+  "type": "module",
+  "name": "@kosmojs/solid-generator",
+  "version": "0.0.0-alpha.0",
+  "author": "Slee Woo",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "pkg/*"
+  ],
+  "exports": {
+    ".": {
+      "types": "./pkg/src/index.d.ts",
+      "default": "./pkg/index.js"
+    }
+  },
+  "scripts": {
+    "build": "esbuilder src/index.ts",
+    "test": "vitest --root ../../.. --project generators/solid-generator"
+  },
+  "dependencies": {
+    "@kosmojs/devlib": "workspace:^",
+    "esbuild": "^0.25.11",
+    "fs-extra": "^11.3.2",
+    "picomatch": "^4.0.3"
+  },
+  "devDependencies": {
+    "@kosmojs/config": "workspace:^",
+    "@types/fs-extra": "^11.0.4",
+    "@types/picomatch": "^4.0.2",
+    "vite": "^7.1.12"
+  },
+  "peerDependencies": {
+    "@solidjs/router": "^0.15.3",
+    "solid-js": "^1.9.7",
+    "vite-plugin-solid": "^2.11.6"
+  }
+}
