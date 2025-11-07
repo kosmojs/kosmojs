@@ -1,6 +1,6 @@
 ---
 title: SolidJS - Application Structure
-description: Generated SolidJS application files including App.tsx with Suspense boundaries, router.tsx with route configuration, and index.tsx entry point for rendering to the DOM.
+description: Generated SolidJS application files including App.tsx with Suspense boundaries, router.tsx with route configuration, and entry/client.tsx entry point for rendering to the DOM.
 head:
   - - meta
     - name: keywords
@@ -41,14 +41,14 @@ The `router.tsx` file connects `KosmoJS`'s generated routes to SolidJS Router:
 ```tsx [router.tsx]
 import { Router } from "@solidjs/router";
 
-import { routes } from "@front/{solid}/router";
+import { routes } from "@src/{solid}";
 
 import App from "./App";
 import { baseurl } from "./config";
 
-export default function AppRouter() {
+export default function AppRouter(props?: { url?: string }) {
   return (
-    <Router root={App} base={baseurl}>
+    <Router root={App} base={baseurl} {...props}>
       {routes}
     </Router>
   );
@@ -66,18 +66,19 @@ meaning every route renders within the App's Suspense boundary.
 
 ## 🎯 The Entry Point
 
-The `index.tsx` file serves as your application's entry point,
+The `entry/client.tsx` file serves as your application's entry point,
 rendering your router into the DOM:
 
-```tsx [index.tsx]
-import { render } from "solid-js/web";
+```tsx [entry/client.tsx]
+import { hydrate, render } from "solid-js/web";
 
-import Router from "./router";
+import { shouldHydrate } from "@src/{solid}";
+import Router from "../router";
 
 const root = document.getElementById("app");
 
 if (root) {
-  render(Router, root);
+  shouldHydrate ? hydrate(Router, root) : render(Router, root);
 } else {
   console.error("Root element not found!");
 }
@@ -87,10 +88,11 @@ This file is referenced from your `index.html` file,
 which `KosmoJS` creates when you initialize a source folder:
 
 ```html
-<script type="module" src="/index.tsx"></script>
+<script type="module" src="./entry/client.tsx"></script>
 ```
 
 The `index.html` file serves as Vite's entry point.
 When Vite processes your application, it starts from this HTML file,
-follows the script import to `index.tsx`, and builds your entire application graph from there.
+follows the script import to `entry/client.tsx`,
+and builds your entire application graph from there.
 

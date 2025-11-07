@@ -7,7 +7,7 @@ head:
       content: solidjs customization, app customization, custom router, error boundaries, custom components, generator customization
 ---
 
-The generated files - `App.tsx`, `router.tsx`, `index.tsx`, and `components/Link.tsx`-
+The generated files - `App.tsx`, `router.tsx`, `entry/client.tsx`, and `components/Link.tsx` -
 live in your source folder, not in `lib`.
 
 This means they're yours to customize.
