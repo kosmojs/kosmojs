@@ -1,0 +1,127 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+
+  "files": {
+    "includes": [
+      "vitest.config.js",
+      "docs/**/*.ts",
+      "test/**/*.ts",
+      "packages/*/*/{src,test}/**/*.ts",
+      "!packages/*/*/test/**/@fixtures/**/lib/*"
+    ]
+  },
+
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "complexity": {
+        "noBannedTypes": "off",
+        "noUselessTernary": "off",
+        "useLiteralKeys": "off"
+      },
+      "correctness": {
+        "noUnusedVariables": {
+          "level": "info",
+          "options": {
+            "ignoreRestSiblings": true
+          }
+        }
+      },
+      "style": {
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": true,
+            "requireAscii": true
+          }
+        }
+      },
+      "suspicious": {
+        "noEmptyInterface": "off",
+        "noConsole": {
+          "level": "info",
+          "options": {
+            "allow": ["assert", "error", "info", "warn"]
+          }
+        }
+      }
+    }
+  },
+
+  "overrides": [
+    {
+      "includes": [
+        "./test/**/*.ts",
+        "./packages/build/esbuilder/src/index.ts",
+        "./packages/core/dev/src/base-plugin/api-handler.ts",
+        "./packages/core/create/src/cli.ts",
+        "./packages/core/create/src/templates/**/*.ts"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    }
+  ],
+
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              [":NODE:", ":BUN:"],
+              ":BLANK_LINE:",
+              [
+                ":PACKAGE:",
+                ":PACKAGE_WITH_PROTOCOL:",
+                "!@test/**",
+                "!@kosmojs/**"
+              ],
+              ":BLANK_LINE:",
+
+              [
+                ":PACKAGE:",
+                ":PACKAGE_WITH_PROTOCOL:",
+                "!@test/**",
+                "@kosmojs/**",
+                "!@kosmojs/**/*-generator"
+              ],
+              ":BLANK_LINE:",
+
+              [
+                ":PACKAGE:",
+                ":PACKAGE_WITH_PROTOCOL:",
+                "@kosmojs/**/*-generator"
+              ],
+              ":BLANK_LINE:",
+
+              [":PACKAGE:", "@test/**"],
+              ":BLANK_LINE:",
+
+              [":URL:"],
+              ":BLANK_LINE:",
+
+              [":ALIAS:"],
+              ":BLANK_LINE:",
+
+              [":PATH:", "!./templates/**"],
+              ":BLANK_LINE:",
+
+              [":PATH:"]
+            ]
+          }
+        }
+      }
+    }
+  }
+}
