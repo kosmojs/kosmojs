@@ -1,0 +1,15 @@
+import { Router } from "@solidjs/router";
+
+import { routes } from "{{importPathmap.solid}}";
+
+import App from "./App";
+import { baseurl } from "./config";
+
+{{! INFO: HMR broken if default export is an anonymous function }}
+export default function AppRouter(props?: { url?: string }) {
+  return (
+    <Router root={App} base={baseurl} {...props}>
+      {routes}
+    </Router>
+  );
+}

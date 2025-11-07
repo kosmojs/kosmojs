@@ -1,0 +1,15 @@
+import { renderToString, generateHydrationScript } from "solid-js/web";
+
+import Router from "../router";
+
+const renderFactory: import("@kosmojs/dev").SSRFactory = (url) => {
+  const head = generateHydrationScript()
+  return {
+    renderToString() {
+      const html = renderToString(() => Router({ url }));
+      return { head, html };
+    },
+  }
+};
+
+export default renderFactory;
