@@ -103,7 +103,7 @@ Choose one and use it consistently throughout your project.
 ## 🔍 Complete Reference
 
 For a comprehensive list of all built-in types to avoid,
-check the [tsuit library](https://github.com/sleewoo/tsuit/blob/main/src/builtins.ts){target="_blank" rel="noopener"}
+check the [tfusion library](https://github.com/sleewoo/tfusion/blob/main/src/builtins.ts){target="_blank" rel="noopener"}
 that `KosmoJS` uses for type flattening.
 
 ## 💡 Best Practices
