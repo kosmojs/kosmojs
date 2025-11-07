@@ -15,7 +15,7 @@ export default defineConfig(import.meta.dirname, {
     port: {{folder.port}},
   },
   plugins: [
-    {{#each plugins}}{{importName}}(),
+    {{#each plugins}}{{importName}}({{options}}),
     {{/each}}
     devPlugin(apiurl, {
       generators: [

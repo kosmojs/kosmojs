@@ -86,7 +86,9 @@ if (viteBaseExists && tsconfigExists && packageJson?.distDir) {
     ),
   );
 
-  const folder = await prompts<"name" | "framework" | "baseurl" | "port">([
+  const folder = await prompts<
+    "name" | "framework" | "ssr" | "baseurl" | "port"
+  >([
     {
       type: "text",
       name: "name",
@@ -110,6 +112,19 @@ if (viteBaseExists && tsconfigExists && packageJson?.distDir) {
         { title: "SolidJS", value: { name: "solid" } },
         { title: "React", value: { name: "react" } },
       ],
+    },
+
+    {
+      type: (prev) => {
+        return prev.name === "none" // skip if no framework
+          ? undefined
+          : "toggle";
+      },
+      name: "ssr",
+      message: "Enable server-side rendering (SSR)?",
+      initial: true,
+      active: "yes",
+      inactive: "no",
     },
 
     {

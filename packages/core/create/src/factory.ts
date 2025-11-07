@@ -10,6 +10,9 @@ import reactGenerator from "~/generators/react-generator/package.json" with {
 import solidGenerator from "~/generators/solid-generator/package.json" with {
   type: "json",
 };
+import ssrGenerator from "~/generators/ssr-generator/package.json" with {
+  type: "json",
+};
 
 import packageJson from "../package.json" with { type: "json" };
 
@@ -36,6 +39,7 @@ export type Framework = {
 export type SourceFolder = {
   name: string;
   framework: Framework;
+  ssr: boolean;
   baseurl: string;
   port: number;
 };
@@ -43,6 +47,7 @@ export type SourceFolder = {
 type Plugin = {
   importDeclaration: string;
   importName: string;
+  options: string;
 };
 
 type Generator = {
@@ -193,6 +198,7 @@ export default async (
       plugins.push({
         importDeclaration: `import solidPlugin from "vite-plugin-solid";`,
         importName: "solidPlugin",
+        options: folder.ssr ? "{ ssr: true }" : "",
       });
 
       generators.push({
@@ -221,6 +227,7 @@ export default async (
       plugins.push({
         importDeclaration: `import reactPlugin from "@vitejs/plugin-react";`,
         importName: "reactPlugin",
+        options: "",
       });
 
       generators.push({
@@ -232,6 +239,17 @@ export default async (
       });
 
       compilerOptions.jsxImportSource = "react";
+    }
+
+    if (folder.ssr) {
+      generators.push({
+        importDeclaration: `import ssrGenerator from "@kosmojs/ssr-generator";`,
+        importName: "ssrGenerator",
+        options: "",
+      });
+      Object.assign(devDependencies, {
+        "@kosmojs/ssr-generator": `^${ssrGenerator.version}`,
+      });
     }
 
     const context = {
@@ -258,7 +276,7 @@ export default async (
       ...(["solid", "react"].includes(folder.framework.name)
         ? [
             [`${defaults.pagesDir}/index/index.tsx`, ""],
-            ["index.tsx", ""],
+            [`${defaults.entryDir}/client.tsx`, ""],
           ]
         : []),
     ]) {
