@@ -1,0 +1,38 @@
+{
+  "type": "module",
+  "name": "@kosmojs/react-generator",
+  "version": "0.0.0-alpha.0",
+  "author": "Slee Woo",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "pkg/*"
+  ],
+  "exports": {
+    ".": {
+      "types": "./pkg/src/index.d.ts",
+      "default": "./pkg/index.js"
+    }
+  },
+  "scripts": {
+    "build": "esbuilder src/index.ts",
+    "test": "vitest --root ../../.. --project generators/react-generator"
+  },
+  "dependencies": {
+    "@kosmojs/devlib": "workspace:^",
+    "fs-extra": "^11.3.2",
+    "picomatch": "^4.0.3"
+  },
+  "devDependencies": {
+    "@kosmojs/config": "workspace:^",
+    "@types/fs-extra": "^11.0.4",
+    "@types/picomatch": "^4.0.2"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router": "^7.9.4"
+  }
+}
