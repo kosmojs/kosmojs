@@ -1,21 +1,25 @@
 ---
-title: React - Application Structure
-description: Generated React application files including App.tsx with Suspense boundaries, router.tsx with React Router configuration, and index.tsx entry point with StrictMode.
+title: React - Application Foundation
+description: Generator-produced React files including App.tsx with Suspense,
+  router.tsx connecting React Router, and entry/client.tsx with StrictMode for
+  DOM rendering initiation.
 head:
   - - meta
     - name: keywords
-      content: react app structure, suspense boundary, react router config, app component, createRoot, react entry point, vite react
+      content: react app foundation, suspense setup, react router integration,
+        createRoot hydration, app entry point, vite react entry, react project
+        structure, strictmode setup
 ---
 
-React generator automates the project setup by creating the foundational files needed for routing and application structure.
+The React generator automates foundational file creation, establishing routing
+infrastructure and application structure. This includes router integration,
+type-safe navigation components, and lazy-loaded route definitions forming a
+production-ready foundation.
 
-This includes the router configuration, type-safe navigation components,
-and lazy-loaded route definitions, providing a ready-to-use infrastructure.
+## 🎨 Root Application Component
 
-## 🎨 The App Component
-
-The generator creates `App.tsx` as your root application component.
-This component wraps your entire application and provides React's Suspense boundary:
+The generator creates `App.tsx` as your application's root wrapper, providing
+React's Suspense boundary:
 
 ```tsx [App.tsx]
 import { Suspense, type ReactNode } from "react";
@@ -29,89 +33,104 @@ export default function App({ children }: { children: ReactNode }) {
 }
 ```
 
-This simple component serves as your application shell.
-The Suspense boundary allows child components to suspend during async operations
-like data fetching, showing fallback content until resources are ready.
+This component forms your application shell. The Suspense boundary enables
+child components to suspend during asynchronous operations like data fetching,
+displaying fallback content until resources become available.
 
-You can customize this component to add global layouts, error boundaries,
-or other application-wide concerns.
+Customize this component for global layouts, error boundaries, or
+application-wide infrastructure concerns.
 
-## 🛣️ The Router Configuration
+## 🛣️ Router Integration
 
-The `router.tsx` file connects `KosmoJS`'s generated routes to React Router:
+The `router.tsx` file bridges KosmoJS's generated routes with React Router:
 
 ```tsx [router.tsx]
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router";
+import {
+  createBrowserRouter,
+  createStaticRouter,
+  Outlet,
+  RouterProvider,
+  StaticRouterProvider,
+} from "react-router";
 
-import { routes } from "@admin/{react}/router";
+import { routes } from "@src/{react}";
 
 import App from "./App";
 import { baseurl } from "./config";
 
-const router = createBrowserRouter(
-  [
-    {
-      path: "/",
-      element: (
-        <App>
-          <Outlet />
-        </App>
-      ),
-      HydrateFallback: () => <div>Loading...</div>,
-      children: routes,
-    },
-  ],
+export const routeStack = [
   {
-    basename: baseurl,
+    path: "/",
+    element: (
+      <App>
+        <Outlet />
+      </App>
+    ),
+    HydrateFallback: () => <div>Loading...</div>,
+    children: routes,
   },
-);
+];
 
-export default function Router() {
+export default function AppRouter(props?: { context?: never }) {
+  if (props?.context) {
+    const router = createStaticRouter(routeStack, props.context);
+    return <StaticRouterProvider router={router} context={props.context} />;
+  }
+  const router = createBrowserRouter(routeStack, { basename: baseurl });
   return <RouterProvider router={router} />;
 }
 ```
 
-This configuration uses your source folder's `baseurl` from the config file,
-ensuring that routes are served from the correct path.
+This configuration utilizes your source folder's `baseurl` from configuration
+files, ensuring correct path-based route serving.
 
-The `routes` import comes from generated code in your `lib` directory,
-which we'll explore next.
+The `routes` import originates from generated code within your `lib`
+directory, explored in subsequent sections.
 
-The Router uses your App component as the root,
-meaning every route renders within the App's Suspense boundary.
+Router configuration wraps all routes within your App component, rendering
+every route inside the App's Suspense boundary.
 
-## 🎯 The Entry Point
+## 🎯 Application Entry
 
-The `index.tsx` file serves as your application's entry point,
-rendering your router into the DOM:
+The `entry/client.tsx` file serves as your application's DOM rendering entry
+point:
 
-```tsx [index.tsx]
+```tsx [entry/client.tsx]
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { hydrateRoot, createRoot } from "react-dom/client";
 
-import Router from "./router";
+import { shouldHydrate } from "@src/{react}";
+import Router from "../router";
 
 const root = document.getElementById("app");
 
 if (root) {
-  createRoot(root).render(
-    <StrictMode>
-      <Router />
-    </StrictMode>
-  );
+  if (shouldHydrate) {
+    hydrateRoot(
+      root,
+      <StrictMode>
+        <Router />
+      </StrictMode>,
+    );
+  } else {
+    createRoot(root).render(
+      <StrictMode>
+        <Router />
+      </StrictMode>,
+    );
+  }
 } else {
   console.error("Root element not found!");
 }
 ```
 
-This file is referenced from your `index.html` file,
-which `KosmoJS` creates when you initialize a source folder:
+Your `index.html` file references this entry point, created during source
+folder initialization:
 
 ```html
-<script type="module" src="/index.tsx"></script>
+<script type="module" src="./entry/client.tsx"></script>
 ```
 
-The `index.html` file serves as Vite's entry point.
-When Vite processes your application, it starts from this HTML file,
-follows the script import to `index.tsx`, and builds your entire application graph from there.
-
+The `index.html` file serves as Vite's processing entry point. Vite begins
+from this HTML file, follows the script import to `entry/client.tsx`, and
+constructs your complete application graph from there.

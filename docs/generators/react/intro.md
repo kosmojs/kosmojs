@@ -1,25 +1,29 @@
 ---
-title: React Generator
-description: Seamlessly connect KosmoJS file-system routing to React Router with automatic route configuration, type-safe navigation, lazy loading, and Suspense boundary integration.
+title: React Integration for KosmoJS
+description: Bridge KosmoJS directory-based routing with React Router through
+  automated configuration. Type-safe navigation, code splitting, and Suspense
+  integration for modern React development workflows.
 head:
   - - meta
     - name: keywords
-      content: react generator, react router, type-safe navigation, lazy loading, suspense boundaries, react vite, file-system routing, react hooks
+      content: react integration, react router setup, automated routing config,
+        code splitting react, type-safe links, suspense integration, vite react
+        plugin, react navigation
 ---
 
-The React generator seamlessly connects `KosmoJS`'s file-system routing to React's rendering system and router implementation.
+React generator establishes a bridge between directory-based routing
+and React Router, transforming your page components into navigable routes
+automatically. This integration delivers type safety across navigation points
+while implementing efficient code-splitting strategies.
 
-This enables a fluid development experience where page components are automatically registered as routes
-with end-to-end type safety and efficient loading strategies.
+The generator handles route configuration behind the scenes, produces
+navigation utilities with compile-time type checking, and provides helpers
+designed around React's Suspense mechanism and modern data loading approaches.
 
-The generator automates routing configuration, generates navigation utilities with type checking,
-and supplies helpers that naturally align with React's Suspense boundaries and data fetching patterns.
+## 🛠️ Package Installation
 
-## 🛠 Installation and Setup
-
-Install the React generator as a development dependency.
-Using the `-D` flag keeps it out of your production builds
-since it's only needed during development:
+Add the React generator to your project's development dependencies. The `-D`
+flag ensures this tooling stays out of production bundles:
 
 ::: code-group
 
@@ -36,7 +40,7 @@ yarn add -D @kosmojs/react-generator
 ```
 :::
 
-Register the generator in your source folder's `vite.config.ts`:
+Configure the generator within your source folder's `vite.config.ts`:
 
 ```ts [vite.config.ts]
 import reactPlugin from "@vitejs/plugin-react";
@@ -58,25 +62,24 @@ export default defineConfig(import.meta.dirname, {
 })
 ```
 
-Once configured, the generator adds several files to the root of your source folder
-that form the foundation of your React application.
+After configuration completes, the generator deploys essential files to your
+source folder, establishing your React application's foundation.
 
-## 🗂️ Working with Multiple Source Folders
+## 🗂️ Multi-Folder Project Architecture
 
-For projects organized across multiple source directories,
-the React generator supports independent configuration for each location,
-enabling separate application architectures to coexist.
+When projects span multiple source directories, each folder receives its own
+React generator instance with independent configuration capabilities. This
+architectural pattern enables different application areas to coexist with
+distinct approaches.
 
-You might maintain your core application in one directory
-while operating an administrative panel from another,
-each with dedicated routing systems, UI components, and data handling approaches.
+Your primary application might occupy one directory while administrative
+tooling resides in another, each maintaining separate routing hierarchies,
+component libraries, and data management strategies.
 
-Type definitions and utility functions generated for each directory remain completely isolated,
-ensuring clean separation and preventing naming conflicts.
+Generated type definitions and utility functions remain isolated per source
+folder, preventing cross-contamination between application domains. Routes
+defined in your main application won't pollute the admin interface's
+navigation types, preserving architectural boundaries.
 
-The route definitions from your main application won't appear in the admin interface's navigation types,
-maintaining clear boundaries between different application domains.
-
-While each application operates within its own namespace,
-they all benefit from consistent `KosmoJS` structural conventions.
-
+Despite operating in separate namespaces, all applications share KosmoJS's
+foundational organizational patterns, ensuring consistency where it matters.

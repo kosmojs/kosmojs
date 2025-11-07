@@ -1,21 +1,24 @@
 ---
-title: React - Custom Page Templates
-description: Override default page templates for specific routes using glob patterns. Create specialized templates for landing pages, marketing content, and admin interfaces.
+title: React - Template Customization
+description: Define custom page templates matching specific route patterns.
+  Build specialized templates for promotional pages, landing experiences, and
+  administrative interfaces with glob pattern matching.
 head:
   - - meta
     - name: keywords
-      content: custom templates, page templates, glob patterns, route templates, template matching, landing pages, react templates
+      content: react templates, custom page templates, route patterns, glob
+        matching, template configuration, landing page templates, react
+        component templates, route customization
 ---
 
-The `React` generator allows you to override the default page template
-for specific routes using pattern matching.
+React generator supports template overrides for specific routes
+through pattern-based matching. This capability enables specialized templates
+for promotional content, landing experiences, or routes requiring distinct
+structural approaches.
 
-This is useful for creating specialized templates
-for landing pages, marketing pages, or any route that needs custom structure.
+## ⚙️ Template Configuration
 
-## ⚙️ Configuration
-
-Pass custom templates through the generator options in your `vite.config.ts`:
+Supply custom templates via generator options in `vite.config.ts`:
 
 ```ts [vite.config.ts]
 import reactPlugin from "@vitejs/plugin-react";
@@ -53,13 +56,13 @@ export default defineConfig(import.meta.dirname, {
 });
 ```
 
-## 🎯 Pattern Matching
+## 🎯 Pattern Syntax
 
-Templates use glob-style patterns to match routes:
+Route matching employs glob-style pattern syntax:
 
-### Single Level Match (`*`)
+### Single-Depth Wildcard (`*`)
 
-Matches routes at a specific depth:
+Captures routes at one specific nesting level:
 
 ```ts
 {
@@ -67,18 +70,18 @@ Matches routes at a specific depth:
 }
 ```
 
-**Matches:**
+**Captures:**
 - `landing/home`
 - `landing/about`
 - `landing/[slug]`
 
-**Does not match:**
-- `landing/features/new` (too deep)
-- `landing` (not deep enough)
+**Excludes:**
+- `landing/features/new` (excessive depth)
+- `landing` (insufficient depth)
 
-### Multi-Level Match (`**`)
+### Multi-Depth Wildcard (`**`)
 
-Matches routes at any depth:
+Captures routes at arbitrary nesting depths:
 
 ```ts
 {
@@ -86,14 +89,14 @@ Matches routes at any depth:
 }
 ```
 
-**Matches:**
+**Captures:**
 - `marketing/campaigns/summer`
 - `marketing/promo/2024/special`
 - `marketing/[id]/details`
 
-### Exact Match
+### Literal Match
 
-Match a specific route:
+Targets one specific route:
 
 ```ts
 {
@@ -101,30 +104,29 @@ Match a specific route:
 }
 ```
 
-**Matches:**
-- Only `products/list`
+**Captures:**
+- `products/list` exclusively
 
-## 📊 Pattern Priority
+## 📊 Resolution Priority
 
-When multiple patterns match a route,
-the first matching pattern in the configuration object is used:
+When patterns conflict, the first matching pattern wins:
 
 ```ts
 reactGenerator({
   templates: {
-    "landing/home": homeTemplate,      // Most specific
-    "landing/*": landingTemplate,      // Less specific
-    "**/*": fallbackTemplate,          // Least specific
+    "landing/home": homeTemplate,      // Highest specificity
+    "landing/*": landingTemplate,      // Medium specificity
+    "**/*": fallbackTemplate,          // Lowest specificity
   },
 })
 ```
 
-For the route `landing/home`:
-- Uses `homeTemplate` (exact match takes priority)
+For route `landing/home`:
+- Applies `homeTemplate` (literal match supersedes wildcards)
 
-## 🔀 Dynamic Routes
+## 🔀 Parameter Compatibility
 
-Custom templates work with all parameter types:
+Templates function with all parameter types:
 
 ```ts
 {
@@ -142,12 +144,11 @@ Custom templates work with all parameter types:
 }
 ```
 
-The template receives the same props as default templates,
-including route parameters.
+Templates receive identical props as defaults, including route parameters.
 
-## 📝 Template Structure
+## 📝 Template Format
 
-Custom templates are standard `React` component strings:
+Custom templates follow standard React component structure:
 
 ```ts
 const customTemplate = `
@@ -166,11 +167,11 @@ export default function Page() {
 `;
 ```
 
-## ✨ Use Cases
+## ✨ Application Scenarios
 
-### Landing Pages
+### Promotional Pages
 
-Create specialized landing pages with custom layouts:
+Build specialized promotional experiences:
 
 ```ts
 const landingTemplate = `
@@ -195,9 +196,9 @@ reactGenerator({
 })
 ```
 
-### Marketing Pages
+### Marketing Content
 
-Use different templates for marketing content:
+Apply distinct templates across marketing routes:
 
 ```ts
 reactGenerator({
@@ -208,9 +209,9 @@ reactGenerator({
 })
 ```
 
-### Admin Pages
+### Administrative Interfaces
 
-Apply consistent structure to admin routes:
+Enforce uniform structure across admin routes:
 
 ```ts
 reactGenerator({
@@ -220,12 +221,12 @@ reactGenerator({
 })
 ```
 
-## 📄 Default Template
+## 📄 Fallback Behavior
 
-Routes that don't match any custom pattern use the default generator template,
-which displays the route name and is meant to be replaced with your actual implementation.
+Routes without pattern matches receive the generator's default template
+(displaying route name as placeholder for your implementation).
 
-If you want a custom default for all routes:
+Override the universal default:
 
 ```ts
 reactGenerator({
@@ -235,23 +236,22 @@ reactGenerator({
 })
 ```
 
-This overrides the generator's default template for all routes.
+This replaces the generator's fallback for all routes.
 
-## 💡 Best Practices
+## 💡 Implementation Guidelines
 
-**Keep templates focused**<br>
-Use custom templates for routes that need specific structure,
-not for minor variations.
+**Maintain template focus**<br>
+Reserve custom templates for routes requiring structural differences, not
+cosmetic variations.
 
-**Use layouts**<br>
-Instead of duplicating structure across templates,
-import shared layouts within templates.
+**Leverage layout components**<br>
+Import shared layouts within templates rather than duplicating structure
+across template definitions.
 
-**Consider maintenance**<br>
-Remember that templates are strings in your config file.
-For complex templates, consider generating them from separate files.
+**Plan for maintainability**<br>
+Templates exist as configuration strings. Complex templates warrant external
+file generation strategies.
 
-**Test thoroughly**<br>
-Custom templates bypass the default generator behavior,
-so ensure they work with your routing and parameter handling.
-
+**Validate thoroughly**<br>
+Custom templates bypass default generator patterns, requiring verification of
+routing and parameter handling compatibility.

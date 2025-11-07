@@ -1,18 +1,22 @@
 ---
-title: React - Loader Pattern
-description: Integrate data fetching with React Router loaders. Export loader functions that work with useLoaderData for efficient data fetching before component rendering.
+title: Data Loading with React Router
+description: Implement React Router's loader pattern for pre-fetch data
+  delivery. Export loader functions working with useLoaderData for optimized
+  data availability before component render.
 head:
   - - meta
     - name: keywords
-      content: react loader, data fetching, useLoaderData, route data, react router data, preloading, loader function, async data
+      content: react router loaders, data prefetching, useLoaderData hook,
+        route data loading, react data patterns, loader functions, async
+        loading react, react router data
 ---
 
-The loader pattern integrates beautifully with React Router's data fetching.
-You define what data a route needs,
-and the router ensures that data is ready when the component renders.
+React Router's loader pattern synchronizes data availability with navigation,
+ensuring information readiness when components mount. Define required data at
+the route level, letting the router handle fetch orchestration.
 
-First, create an API endpoint that provides the data.
-Suppose you have `api/users/data/index.ts`:
+Begin by establishing an API endpoint supplying the required data. Consider
+`api/users/data/index.ts`:
 
 ```ts [api/users/data/index.ts]
 import { defineRoute } from "@front/{api}/users/data";
@@ -25,8 +29,8 @@ export default defineRoute(({ GET }) => [
 ]);
 ```
 
-In your page component, import the fetch client's GET method
-and use it both for loading and for accessing the data in your component:
+Within your page component, import the fetch client's GET method, utilizing
+it for both loading export and component data access:
 
 ```tsx [pages/users/index.tsx]
 import { useLoaderData } from "react-router-dom";
@@ -48,19 +52,20 @@ export default function Page() {
 export const loader = fetchData;
 ```
 
-This pattern is elegant in its simplicity.
+This pattern achieves elegance through simplicity.
 
-By exporting a `loader` function, you instruct the router which data-fetching logic to execute in advance.
-During component rendering, the `useLoaderData` hook identifies this same function
-and seamlessly accesses the pre-retrieved information.
+Exporting a `loader` function instructs the router which fetch logic executes
+ahead of component mount. During render, `useLoaderData` recognizes this
+identical function reference and retrieves pre-fetched information directly
+from the router's cache.
 
-An integrated caching layer within the router prevents redundant API calls,
-ensuring your component works with the exact dataset obtained during the initial loading phase.
+The router's internal caching mechanism prevents redundant network requests,
+guaranteeing your component receives the exact dataset acquired during the
+pre-fetch phase.
 
-This pattern maintains full type consistency throughout the data pipeline.
-The GET method from your fetch client inherits its typing directly from the API endpoint's response structure.
-
-The `useLoaderData` hook automatically derives its return type from the loader function's signature.
-Consequently, your component gains precise knowledge of the expected data format,
-with all types originating from your API specification.
-
+Type consistency flows through this entire pipeline automatically. The fetch
+client's GET method inherits typing from your API endpoint's response
+structure. The `useLoaderData` hook derives its return type from the loader
+function's signature. Your component consequently receives precise type
+information about data shape, all originating from your API specification
+without manual type declarations.

@@ -1,19 +1,22 @@
 ---
-title: React - Type-Safe Link Component
-description: Type-safe navigation with generated Link component that wraps React Router's Link. Autocomplete for routes, compile-time parameter validation, and query string handling.
+title: React - Type-Safe Navigation
+description: Generated Link component wrapping React Router with compile-time
+  route validation. Autocomplete navigation targets, parameter enforcement,
+  and query string handling for error-free routing.
 head:
   - - meta
     - name: keywords
-      content: react link, type-safe navigation, route parameters, LinkProps, typed routing, query parameters, react router navigation
+      content: react navigation, type-safe links, react router wrapper, route
+        autocomplete, parameter validation, query strings react, typed
+        navigation, react routing safety
 ---
 
-The generator creates a `Link` component that wraps React Router's `Link` component
-with type safety for route navigation.
+The generator produces a `Link` component wrapping React Router's native
+`Link` with compile-time route validation. This wrapper understands your
+complete route structure and parameters, delivering autocomplete and type
+checking throughout navigation code.
 
-This component knows about all your routes and their parameters,
-providing autocomplete and type checking for navigation.
-
-The component is available at `components/Link.tsx` in your source folder:
+Access this component at `components/Link.tsx` within your source folder:
 
 ```tsx [components/Link.tsx]
 import { Link as RouterLink, type LinkProps as RouterLinkProps, useLocation } from "react-router";
@@ -54,7 +57,7 @@ export default function Link(
 }
 ```
 
-Using Link in your components provides type-safe navigation:
+Implement type-safe navigation throughout your components:
 
 ```tsx [components/menu.tsx]
 import Link from "@front/components/Link";
@@ -79,8 +82,8 @@ export default function Menu() {
 }
 ```
 
-The `to` prop is typed as `LinkProps`,
-which is a union type generated based on your routes:
+The `to` prop accepts `LinkProps` type - a union generated from your route
+structure:
 
 ```ts
 export type LinkProps =
@@ -90,20 +93,21 @@ export type LinkProps =
   // ... other routes
 ```
 
-This typing approach delivers multiple advantages during development.
+This typing mechanism provides several development advantages.
 
-As you begin typing the initial array element, TypeScript's IntelliSense immediately presents compatible route options.
-For parameterized routes, the type system mandates including the necessary parameters as subsequent array items.
+Typing the first array element triggers TypeScript's IntelliSense with valid
+route suggestions. Selecting parameterized routes requires providing those
+parameters as subsequent array elements - the type system enforces this.
 
-Route directory renames trigger immediate TypeScript feedback,
-surfacing errors at every navigation link using the outdated reference.
-This provides comprehensive guidance for updating all affected locations.
+Renaming route directories generates TypeScript errors at every Link
+referencing the old identifier, creating an automatic refactoring checklist
+across your codebase.
 
-The optional `query` property takes a standard object and automatically converts it into a properly formatted query string,
-with the Link component managing all necessary URL encoding internally.
+The optional `query` prop accepts plain objects, with the Link component
+handling URL encoding and query string serialization internally.
 
-When the `to` property is omitted, the Link component defaults to the current page location.
-This behavior enables convenient query parameter modifications without triggering actual navigation.
+Omitting the `to` prop targets the current location, enabling query parameter
+manipulation without navigation:
 
 ```tsx
 // Add a query parameter to current route
@@ -112,10 +116,7 @@ This behavior enables convenient query parameter modifications without triggerin
 </Link>
 ```
 
-The Link component enhances React Router's `Link` component with type safety
-while accepting all the same props. The `to` prop is replaced with a typed version
-that provides autocomplete and parameter validation.
-
-This means you can use props like `replace`, `state`,
-and other router-specific props alongside your type-safe navigation.
-
+The Link component extends React Router's `Link` with type safety while
+accepting all standard props. The `to` prop replacement provides autocomplete
+and validation while preserving access to props like `replace`, `state`, and
+other router-specific attributes.
