@@ -35,6 +35,7 @@ npx kosmojs
 Navigate to your app dir and run `npx kosmojs` again:
 
 ```sh
+cd ./your-app-name
 npx kosmojs
 ```
 

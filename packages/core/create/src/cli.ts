@@ -33,8 +33,8 @@ const halt = (error: string) => {
 
 const usage = [
   "",
-  `${styleText("blue", "npx create kosmo")} ➜ Create a new Project (or a new Source Folder if inside app dir)`,
-  `${styleText("blue", "npx create kosmo")} ${styleText("magenta", "-h | --help")} ➜ Print this message and exit`,
+  `${styleText("blue", "npx kosmojs")} ➜ Create a new Project (or a new Source Folder if inside app dir)`,
+  `${styleText("blue", "npx kosmojs")} ${styleText("magenta", "-h | --help")} ➜ Print this message and exit`,
   "",
 ];
 
