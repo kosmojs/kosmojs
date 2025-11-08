@@ -250,7 +250,7 @@ if (viteBaseExists && tsconfigExists && packageJson?.distDir) {
     `$ ${styleText("blue", `cd ./${app.name}`)}`,
     "",
     `➜ Add a Source Folder:`,
-    `$ ${styleText("blue", "npx create kosmo")}`,
+    `$ ${styleText("blue", "npx kosmojs")}`,
     "",
 
     "📘 Docs: https://kosmojs.dev",
