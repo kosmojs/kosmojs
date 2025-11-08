@@ -24,13 +24,13 @@ It's a **structured Vite template** that gives your Vite project a scalable shap
 
 ## 🚀 Getting Started
 
-### 1: Create a new `KosmoJS` project:
+### 1. Create a new `KosmoJS` project:
 
 ```sh
 npx kosmojs
 ```
 
-### 2: Create a source folder
+### 2. Create a source folder
 
 Navigate to your app dir and run `npx kosmojs` again:
 
@@ -38,14 +38,14 @@ Navigate to your app dir and run `npx kosmojs` again:
 npx kosmojs
 ```
 
-### 3: Install dependencies with your preferred package manager:
+### 3. Install dependencies with your preferred package manager:
 
 ```sh
 npm install
 # or pnpm install / yarn install
 ```
 
-### 4: Start the Dev Server
+### 4. Start the Dev Server
 
 Use `dev` task with source folder name, for example:
 

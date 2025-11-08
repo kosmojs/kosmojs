@@ -14,7 +14,7 @@ yet flexible starting point designed for real-world applications with multiple c
 
 In just a few commands, you'll have a fully-configured Vite project ready to scale with your application's needs.
 
-## 1: Create Application
+## 1. Create Application
 
 Run the following command to create a new `KosmoJS` application:
 
@@ -25,7 +25,7 @@ npx kosmojs
 You'll be asked for an app name (required) and a dist directory (optional, defaults to `dist`).
 This creates a folder with your app name containing a Vite project ready for multiple source folders.
 
-## 2: Create a Source Folder
+## 2. Create a Source Folder
 
 Unlike standard Vite templates, `KosmoJS` doesn't create a source folder immediately.
 Instead, it gives you the tools to create as many source folders as your application needs,
@@ -42,13 +42,15 @@ You'll configure following things:
 
 🔹 The folder name - required and determines what your source folder will be called (use `@` prefix like `@front` for cleaner imports).
 
-🔹 The Frontend Framework - SolidJS / React for now, Vue / Svelte (and perhaps anothers) coming soon
+🔹 The Frontend Framework - SolidJS / React for now, Vue / Svelte coming soon.
+After selecting a framework, you'll be prompted to enable or disable SSR.
+Server-side rendering is enabled by default but can be disabled for source folders that don't require it.
 
 🔹 The base URL - optional and defaults to `/`, determining where this folder's routes will be served.
 
 🔹 The port - optional and defaults to `4000`, setting where the dev server runs for this folder.
 
-## 3: Install Dependencies
+## 3. Install Dependencies
 
 Use your favorite package manager:
 
@@ -67,7 +69,7 @@ yarn install
 ```
 :::
 
-## 4: Start the Dev Server
+## 4. Start the Dev Server
 
 Use `dev` task with source folder name, for example:
 
