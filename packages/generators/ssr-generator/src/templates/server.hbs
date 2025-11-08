@@ -1,0 +1,193 @@
+import { chmod, readFile, unlink } from "node:fs/promises";
+import http, { type IncomingMessage, type ServerResponse } from "node:http";
+import { extname, join, resolve } from "node:path";
+import { parseArgs } from "node:util";
+
+import { baseurl } from "{{importPathmap.config}}";
+
+const STATIC_DIR = resolve(import.meta.dirname, "../client");
+
+interface AssetInfo {
+  buffer: Buffer;
+  contentType: string;
+  size: number;
+}
+
+interface ManifestEntry {
+  file: string;
+  css?: string[];
+  assets?: string[];
+}
+
+type Manifest = Record<string, ManifestEntry>;
+
+const template = await readFile(resolve(STATIC_DIR, "index.html"), "utf8");
+
+const manifest: Manifest = await import(
+  resolve(STATIC_DIR, `.vite/manifest.json?${Date.now()}`),
+  { with: { type: "json" } }
+).then((e) => e.default);
+
+const renderFactory = await import(
+  resolve(import.meta.dirname, `server.js?${Date.now()}`)
+).then((e) => e.default);
+
+export const requestHandlerFactory = (assetCache: Map<string, AssetInfo>) => {
+  return async (req: IncomingMessage, res: ServerResponse) => {
+    const { url } = req;
+
+    if (url === undefined) {
+      res.writeHead(500, { "Content-Type": "text/html" });
+      res.end("<h1>500 · Server Error</h1>");
+      return;
+    }
+
+    const asset = assetCache.get(url.replace(join(baseurl, "/"), ""));
+
+    if (asset) {
+      res.writeHead(200, {
+        "Content-Type": asset.contentType,
+        "Content-Length": asset.size,
+      });
+      res.end(asset.buffer);
+      return;
+    }
+
+    res.writeHead(200, {
+      "Content-Type": "text/html",
+      "Transfer-Encoding": "chunked",
+    });
+
+    const { renderToString, renderToStream } = await renderFactory(url);
+
+    if (renderToString) {
+      const [htmlStart, htmlEnd] = template.split("<!--app-html-->");
+      const { head, html } = await renderToString();
+      res.write(htmlStart.replace("<!--app-head-->", head ?? ""));
+      res.write(html);
+      res.write(htmlEnd);
+      res.end();
+    } else if (renderToStream) {
+      await renderToStream(req, res, { template, manifest });
+    } else {
+      res.writeHead(501, { "Content-Type": "text/html" });
+      res.end("<h1>501 · Not Implemented</h1>");
+    }
+  };
+};
+
+export const loadAssets = async () => {
+  const mimeTypeMap: Record<string, string> = {
+    ".js": "application/javascript",
+    ".mjs": "application/javascript",
+    ".css": "text/css",
+    ".json": "application/json",
+    ".png": "image/png",
+    ".apng": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".svg": "image/svg+xml",
+    ".ico": "image/x-icon",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".ttf": "font/ttf",
+    ".webp": "image/webp",
+  };
+
+  const contentTypeResolver = (filePath: string) => {
+    const ext = extname(filePath).toLowerCase();
+    return mimeTypeMap[ext] || "application/octet-stream";
+  };
+
+  // Collect all asset URLs from manifest
+  const urls = new Set<string>();
+
+  for (const entry of Object.values(manifest)) {
+    if (entry.file) {
+      urls.add(entry.file);
+    }
+    for (const url of [...(entry.css || []), ...(entry.assets || [])]) {
+      urls.add(url);
+    }
+  }
+
+  const assetCache = new Map<string, AssetInfo>();
+
+  // Load all files into memory
+  await Promise.all(
+    Array.from(urls).map(async (url) => {
+      const filePath = resolve(STATIC_DIR, url);
+      const buffer = await readFile(filePath);
+
+      assetCache.set(url, {
+        buffer,
+        contentType: contentTypeResolver(filePath),
+        size: buffer.length,
+      });
+
+      if (/\.(m?js|css)$/i.test(filePath)) {
+        const buffer = await readFile(`${filePath}.map`).catch((error) => {
+          if (error.code !== "ENOENT") {
+            console.error(`✗ Failed reading ${url}.map: ${error.message}`);
+          }
+        });
+        if (buffer) {
+          assetCache.set(`${url}.map`, {
+            buffer,
+            contentType: "application/json",
+            size: buffer.length,
+          });
+        }
+      }
+    }),
+  );
+
+  return assetCache;
+};
+
+const assetCache = await loadAssets();
+
+export const server = http.createServer(requestHandlerFactory(assetCache));
+
+const {
+  values: { port, sock },
+} = parseArgs({
+  options: {
+    port: {
+      type: "string",
+      short: "p",
+    },
+    sock: {
+      type: "string",
+      short: "s",
+    },
+  },
+});
+
+if (port || sock) {
+  if (sock) {
+    await unlink(sock).catch((error) => {
+      if (error.code === "ENOENT") {
+        return;
+      }
+      console.error(error.message);
+      process.exit(1);
+    });
+  }
+
+  console.log("\n  ➜ Loading Assets");
+
+  console.log("\n  ➜ Starting Server", { port, sock });
+
+  server.listen(port || sock, async () => {
+    if (sock) {
+      await chmod(sock, 0o777);
+    }
+    console.log("\n  ➜ Server Started ✨\n");
+  });
+} else {
+  console.error(
+    "Neither -p/--port number nor -s/--sock path provided, exiting...",
+  );
+}
