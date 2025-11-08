@@ -22,7 +22,7 @@
   "dependencies": {
     "@kosmojs/devlib": "workspace:^",
     "esbuild": "^0.25.11",
-    "vite": "^7.1.12"
+    "vite": "^7.2.2"
   },
   "devDependencies": {
     "@kosmojs/config": "workspace:^"
