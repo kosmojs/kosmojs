@@ -4,14 +4,11 @@ import { Worker } from "node:worker_threads";
 
 import type { Plugin, ResolvedConfig } from "vite";
 
-import {
-  type GeneratorConstructor,
-  type PluginOptions,
-  type PluginOptionsResolved,
-  type RouteResolverEntry,
-  type SpinnerFactory,
-  spinnerFactory,
-  withSpinner,
+import type {
+  GeneratorConstructor,
+  PluginOptions,
+  PluginOptionsResolved,
+  RouteResolverEntry,
 } from "@kosmojs/devlib";
 
 import apiGenerator from "@kosmojs/api-generator";
@@ -20,6 +17,7 @@ import fetchGenerator from "@kosmojs/fetch-generator";
 
 import apiHandlerFactory from "./api-handler";
 import routesFactory from "./routes";
+import { type SpinnerFactory, spinnerFactory, withSpinner } from "./spinner";
 import type { WorkerData, WorkerError, WorkerSpinner } from "./worker";
 
 export default (apiurl: string, pluginOptions?: PluginOptions): Plugin => {

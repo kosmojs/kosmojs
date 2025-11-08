@@ -1,4 +1,4 @@
-import { Spinner } from "@topcli/spinner";
+import ora from "ora";
 
 export type SpinnerFactory = {
   text: (text: string) => void;
@@ -8,7 +8,7 @@ export type SpinnerFactory = {
 };
 
 export const spinnerFactory = (startText: string): SpinnerFactory => {
-  const spinner = new Spinner().start(startText);
+  const spinner = ora().start(startText);
   let _text = startText;
   return {
     text(text) {
@@ -30,7 +30,7 @@ export const spinnerFactory = (startText: string): SpinnerFactory => {
       if (text) {
         this.text([_text, text].join("\n"));
       }
-      spinner.failed();
+      spinner.fail();
     },
   };
 };

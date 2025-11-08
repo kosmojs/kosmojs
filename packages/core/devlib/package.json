@@ -25,7 +25,6 @@
     "test": "vitest --root ../../.. --project core/devlib"
   },
   "dependencies": {
-    "@topcli/spinner": "^3.0.0",
     "crc": "^4.3.2",
     "fs-extra": "^11.3.2",
     "handlebars": "^4.7.8",

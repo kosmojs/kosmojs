@@ -10,12 +10,12 @@ import {
   pathResolver,
   type RouteResolver,
   type RouteResolverEntry,
-  type SpinnerFactory,
   type WatcherEvent,
   type WatchHandler,
 } from "@kosmojs/devlib";
 
 import routesFactory from "./routes";
+import type { SpinnerFactory } from "./spinner";
 
 export type WorkerData = Omit<
   PluginOptionsResolved,
