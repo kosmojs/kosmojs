@@ -10,7 +10,7 @@ describe(`SolidJS Generator - Route Integration: { ssr: ${ssr} }`, async () => {
     withRouteContent,
     defaultContentPatternFor,
     teardown,
-  } = await setupTestProject({ name: "solid" }, ssr);
+  } = await setupTestProject({ framework: "solid", ssr });
 
   afterAll(async () => {
     await teardown();

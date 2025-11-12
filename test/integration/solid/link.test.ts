@@ -32,17 +32,15 @@ describe(`SolidJS Generator - Link Component: { ssr: ${ssr} }`, async () => {
     }
   `;
 
-  const { withRouteContent, teardown } = await setupTestProject(
-    {
-      name: "solid",
-      options: {
-        templates: {
-          navigation: navigationTemplate,
-        },
+  const { withRouteContent, teardown } = await setupTestProject({
+    framework: "solid",
+    frameworkOptions: {
+      templates: {
+        navigation: navigationTemplate,
       },
     },
     ssr,
-  );
+  });
 
   afterAll(async () => {
     await teardown();

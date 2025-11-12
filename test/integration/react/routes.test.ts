@@ -10,7 +10,7 @@ describe(`React Generator - Route Integration: { ssr: ${ssr} }`, async () => {
     withRouteContent,
     defaultContentPatternFor,
     teardown,
-  } = await setupTestProject({ name: "react" }, ssr);
+  } = await setupTestProject({ framework: "react", ssr });
 
   afterAll(async () => {
     await teardown();

@@ -32,17 +32,15 @@ describe(`React Generator - Link Component: { ssr: ${ssr} }`, async () => {
     }
   `;
 
-  const { withRouteContent, teardown } = await setupTestProject(
-    {
-      name: "react",
-      options: {
-        templates: {
-          navigation: navigationTemplate,
-        },
+  const { withRouteContent, teardown } = await setupTestProject({
+    framework: "react",
+    frameworkOptions: {
+      templates: {
+        navigation: navigationTemplate,
       },
     },
     ssr,
-  );
+  });
 
   afterAll(async () => {
     await teardown();

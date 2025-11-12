@@ -28,19 +28,17 @@ export default () => {
     withRouteContent,
     defaultContentPatternFor,
     teardown,
-  } = await setupTestProject(
-    {
-      name: "react",
-      options: {
-        templates: {
-          landing: landingTemplate,
-          "landing/**/*": landingTemplate,
-          "marketing/**/*": marketingTemplate,
-        },
+  } = await setupTestProject({
+    framework: "react",
+    frameworkOptions: {
+      templates: {
+        landing: landingTemplate,
+        "landing/**/*": landingTemplate,
+        "marketing/**/*": marketingTemplate,
       },
     },
     ssr,
-  );
+  });
 
   afterAll(async () => {
     await teardown();
