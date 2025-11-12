@@ -201,7 +201,7 @@ try {
           message: "Frontend Framework",
           onState,
           choices: FRAMEWORK_OPTIONS.map((name) => {
-            return { title: name, value: { name } };
+            return { title: name, value: name };
           }),
         },
 
