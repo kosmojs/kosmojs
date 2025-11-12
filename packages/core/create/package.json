@@ -10,30 +10,21 @@
   "files": [
     "pkg/*"
   ],
-  "exports": {
-    "./factory": {
-      "types": "./pkg/src/factory.d.ts",
-      "default": "./pkg/factory.js"
-    }
-  },
-  "bin": {
-    "kosmojs": "./pkg/cli.js"
-  },
+  "bin": "./pkg/cli.js",
   "scripts": {
+    "test": "vitest --root ../../.. --project core/create",
     "prebuild": "rsync -av --delete src/templates pkg",
     "build": "esbuilder src/cli.ts src/factory.ts -s '@/scripts/!(cleanup)*'",
-    "postbuild": "chmod +x pkg/cli.*"
+    "postbuild": "chmod +x pkg/cli.js"
   },
   "dependencies": {
     "@kosmojs/devlib": "workspace:^",
-    "fs-extra": "^11.3.2",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@kosmojs/api": "workspace:^",
     "@kosmojs/config": "workspace:^",
     "@solidjs/router": "^0.15.3",
-    "@types/fs-extra": "^11.0.4",
     "@types/koa": "^3.0.1",
     "@types/koa__router": "^12.0.5",
     "@types/node": "^24.10.0",
@@ -43,6 +34,7 @@
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.0",
     "esbuild": "^0.25.12",
+    "globby": "^15.0.0",
     "qs": "^6.14.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
