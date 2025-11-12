@@ -59,8 +59,8 @@
         "./test/**/*.ts",
         "./packages/build/esbuilder/src/index.ts",
         "./packages/core/dev/src/base-plugin/api-handler.ts",
-        "./packages/core/create/src/cli.ts",
-        "./packages/core/create/src/templates/**/*.ts"
+        "./packages/core/dev/src/cli.ts",
+        "./packages/core/create/**/*.ts"
       ],
       "linter": {
         "rules": {
