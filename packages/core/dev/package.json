@@ -11,6 +11,9 @@
   "files": [
     "pkg/*"
   ],
+  "bin": {
+    "kosmo": "pkg/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./pkg/src/index.d.ts",
@@ -27,7 +30,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "esbuilder src/index.ts src/base-plugin/routes.ts src/base-plugin/worker.ts src/stub-generator/index.ts",
+    "build": "esbuilder src/index.ts src/base-plugin/routes.ts src/base-plugin/worker.ts src/stub-generator/index.ts src/cli.ts",
+    "postbuild": "chmod +x pkg/cli.js",
     "test": "vitest --root ../../.. --project core/dev"
   },
   "dependencies": {
@@ -37,10 +41,12 @@
     "@kosmojs/devlib": "workspace:^",
     "@kosmojs/fetch-generator": "workspace:^",
     "chokidar": "^4.0.3",
+    "concurrently": "^9.2.1",
     "crc": "^4.3.2",
     "dotenv": "^17.2.3",
     "esbuild": "^0.25.12",
     "fs-extra": "^11.3.2",
+    "globby": "^15.0.0",
     "ora": "^9.0.0",
     "picomatch": "^4.0.3",
     "tfusion": "^0.0.23",
