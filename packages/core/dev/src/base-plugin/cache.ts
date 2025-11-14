@@ -3,7 +3,12 @@ import { resolve } from "node:path";
 import crc from "crc/crc32";
 import fsx from "fs-extra";
 
-import pkg from "@kosmojs/dev/package.json" with { type: "json" };
+/**
+ * Import from published package to ensure correct version at runtime.
+ * Local import would be bundled with pre-bump version; this external
+ * import resolves to the actual published package.json.
+ * */
+import self from "@kosmojs/dev/package.json" with { type: "json" };
 import { type ApiRoute, pathResolver } from "@kosmojs/devlib";
 
 export type Cache = {
@@ -134,7 +139,7 @@ const generateFileHash = async (
     ? crc(
         JSON.stringify({
           ...extraContext,
-          [pkg.cacheVersion]: fileContent,
+          [self.cacheVersion]: fileContent,
         }),
       )
     : 0;
