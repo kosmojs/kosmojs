@@ -9,7 +9,7 @@ import { resolve } from "node:path";
  * When bumping the version (even a patch) for a single package, bump it for all packages
  * to keep versions fully synchronized across the project.
  * */
-import self from "kosmojs/package.json";
+import self from "kosmojs/package.json" with { type: "json" };
 
 import { defaults, renderToFile } from "@kosmojs/devlib";
 
