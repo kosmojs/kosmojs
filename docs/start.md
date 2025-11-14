@@ -14,45 +14,60 @@ yet flexible starting point designed for real-world applications with multiple c
 
 In just a few commands, you'll have a fully-configured Vite project ready to scale with your application's needs.
 
-## 1. Create Application
+## 1. Create a new `KosmoJS` project:
 
-Run the following command to create a new `KosmoJS` application:
-
-```bash
-npx kosmojs@latest
+```sh
+npx kosmojs app  # or any name for your project
 ```
 
-You'll be asked for an app name (required) and a dist directory (optional, defaults to `dist`).
-This creates a folder with your app name containing a Vite project ready for multiple source folders.
+After the project is created, navigate to your app directory:
 
-## 2. Create a Source Folder
-
-Unlike standard Vite templates, `KosmoJS` doesn't create a source folder immediately.
-Instead, it gives you the tools to create as many source folders as your application needs,
-each organized around a specific concern.
-
-Navigate to your application directory and run `npx kosmojs` again:
-
-```bash
-cd ./your-app-name
-npx kosmojs
+```sh
+cd ./app
 ```
 
-You'll configure following things:
+All subsequent operations run from inside this directory.
 
-🔹 The folder name - required and determines what your source folder will be called (use `@` prefix like `@front` for cleaner imports).
-
-🔹 The Frontend Framework - SolidJS / React for now, Vue / Svelte coming soon.
-After selecting a framework, you'll be prompted to enable or disable SSR.
-Server-side rendering is enabled by default but can be disabled for source folders that don't require it.
-
-🔹 The base URL - optional and defaults to `/`, determining where this folder's routes will be served.
-
-🔹 The port - optional and defaults to `4000`, setting where the dev server runs for this folder.
-
-## 3. Install Dependencies
+## 2. Install dependencies
 
 Use your favorite package manager:
+
+::: code-group
+```sh [pnpm]
+pnpm install
+```
+
+```sh [npm]
+npm install
+```
+
+```sh [yarn]
+yarn install
+```
+:::
+
+## 3. Create a source folder
+
+Unlike standard Vite templates, `KosmoJS` doesn't create a source folder automatically.
+Instead, you create source folders as needed, each organized around a specific concern
+(e.g., marketing site, admin panel, customer app).
+
+To create a new source folder, simply run:
+
+```sh
+pnpm +folder
+# or npm run +folder / yarn +folder
+```
+
+You'll be prompted to configure:
+
+- **Folder name** (required) - Name for your source folder (e.g., `@front`, `@admin`)
+- **Base URL** - Where this folder serves from (default: `/`)
+- **Dev server port** - Port number for development (default: `4000`)
+- **Frontend framework** - SolidJS, React (Vue and Svelte coming soon)
+- **Server-side rendering (SSR)** - Enable SSR (disabled by default)
+
+The source folder may have added new dependencies. Run the package manager again:
 
 ::: code-group
 ```sh [pnpm]
@@ -85,7 +100,16 @@ yarn dev
 ```
 :::
 
-Each source folder runs on its own port and must be started with a separate command.
+Each source folder runs on its own port with its own base URL.
+
+## 5. Enjoy the Breeze!
+
+Create pages by adding `index.*` files to the `pages/` directory.
+Build API routes by adding `index.ts` files to the `api/` directory.
+
+[Learn more about routing →](/routing/intro.html)
+
+`KosmoJS` provides structure, not constraints. Your project, your rules!
 
 ## 🏗️ Multiple Source Folders
 
@@ -94,14 +118,14 @@ Consider a SaaS product with a marketing site, customer-facing app, and admin da
 Instead of cramming these into a single source directory, create separate source folders:
 
 ```bash
-npx kosmojs
+pnpm +folder
 # folder name: @admin
 # baseurl: /admin
 # port: 4001
 ```
 
 ```bash
-npx kosmojs
+pnpm +folder
 # folder name: @marketing
 # baseurl: /
 # port: 4002

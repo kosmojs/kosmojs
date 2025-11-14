@@ -1,16 +1,24 @@
 ---
 title: Building for Production
-description: Build and deploy KosmoJS applications to production with independent source folder builds, esbuild configuration, deployment strategies for containers, serverless, and edge runtimes.
+description: Build and deploy KosmoJS applications to production with independent source folder builds,
+    esbuild configuration, deployment strategies for containers, serverless, and edge runtimes.
 head:
   - - meta
     - name: keywords
-      content: vite build, production deployment, esbuild configuration, docker deployment, serverless api, edge runtime, nodejs deployment, api bundling, source maps
+      content: vite build, production deployment, esbuild configuration, docker deployment,
+        serverless api, edge runtime, nodejs deployment, api bundling, source maps
 ---
 
 Each source folder in `KosmoJS` builds independently,
 producing deployment-ready output for that specific concern.
 
 ## ▶️ Build Command
+
+Build all source folders for production:
+
+```sh
+pnpm build
+```
 
 Build a specific source folder for production:
 
@@ -34,17 +42,25 @@ When you run `pnpm build`, `KosmoJS` produces:
 - All routes, middleware, and dependencies bundled together
 - Ready to run with Node.js
 
+**SSR Bundle:**
+
+When [SSR is enabled](/generators/solid/server-side-render#🛠%EF%B8%8F-enabling-ssr),
+the build process also generates a production-ready SSR bundle at
+`dist/SOURCE_FOLDER/ssr/index.js`. This standalone Node.js server is ready
+to deploy for server-side rendering.
+
 ## 📂 Build Output Structure
 
-```
+```txt [# tree -L3 dist]
 dist/
-└── @front/
-    ├── api/
-    │   └── index.js          # Bundled API server
-    ├── assets/
-    │   ├── index-[hash].js   # Client JavaScript
-    │   └── index-[hash].css  # Styles
-    └── index.html            # Entry point
+└── @src
+    ├── api
+    │   └── index.js     # Bundled API server
+    ├── client
+    │   ├── assets/      # Scripts, Styles, Images etc.
+    │   └── index.html   # Entry point
+    └── ssr
+        └── index.js     # SSR Bundle (if enabled)
 ```
 
 ## 🚀 Running the Production Build
@@ -66,7 +82,7 @@ You can build all folders at once by simply omitting the source folder name:
 pnpm build
 ```
 
-This builds all your source folders sequentially, placing assets in the `dist` directory.
+This builds all your source folders in parallel, placing assets in the `dist` directory.
 
 ## ⚙️ Build Configuration
 
@@ -146,8 +162,8 @@ The standard Node.js output ensures portability across platforms.
 **Test builds locally** before deploying:
 
 ```bash
-pnpm build @front
-node dist/@front/api/index.js -p 3000
+pnpm build
+node dist/SOURCE_FOLDER/api/index.js -p 3000
 # Test at localhost:3000
 ```
 
@@ -172,8 +188,8 @@ Source maps help debug production errors but increase bundle size slightly. Cons
 **Review bundle size** periodically:
 
 ```sh
-pnpm build @front
-# Check dist/@front/api/index.js size
+pnpm build
+# Check dist/SOURCE_FOLDER/api/index.js size
 ```
 
 If the bundle grows significantly, review dependencies and consider marking some as external.

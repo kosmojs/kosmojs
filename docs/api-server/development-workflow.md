@@ -12,7 +12,7 @@ Each source folder in `KosmoJS` is a **standalone entity** with its own dev serv
 **Why this model?**
 
 Different concerns in your application often have different needs.
-Your public marketing site might need SSG capabilities, your customer app needs authentication flows,
+Your public marketing site might need SSR capabilities, your customer app needs authentication flows,
 and your admin panel requires different access patterns.
 Running them on separate ports with independent configurations means:
 
@@ -26,6 +26,12 @@ separate services on different base URLs-making your development environment ref
 
 ## 🚀 Starting the Dev Server
 
+Run the dev server for all source folders:
+
+```sh
+pnpm dev
+```
+
 Run the dev server for a specific source folder:
 
 ```sh
@@ -35,21 +41,6 @@ pnpm dev @front
 Replace `@front` with your source folder name (`@admin`, `@marketing`, etc.).
 
 The dev server starts on the port configured in your source folder's `vite.config.ts` (default: 4000).
-
-## 📂 Running Multiple Source Folders
-
-Each source folder runs independently, so you can work on multiple concerns simultaneously:
-
-```sh
-# Terminal 1 - Customer app
-pnpm dev @front           # Runs on port 4000
-
-# Terminal 2 - Admin panel
-pnpm dev @admin           # Runs on port 4001
-
-# Terminal 3 - Marketing site
-pnpm dev @marketing       # Runs on port 4002
-```
 
 ## 🔀 What Happens During Development
 
@@ -88,14 +79,6 @@ and further improve the development experience.
 
 Until then, esbuild with full rebuilds provides a solid foundation
 that works smoothly for most projects.
-
-### Request Routing
-
-By default, requests matching your `apiurl` configuration (e.g., `/api/*`) route to your API handler.
-All other requests go to Vite's dev server for client assets.
-
-This automatic routing means you develop your full-stack application with a single dev server
-on a single port - no separate processes to manage.
 
 ## ⚙️ Custom Development Middleware
 
@@ -138,7 +121,7 @@ export const teardownHandler: import("@kosmojs/api").TeardownHandler = () => {
 };
 ```
 
-Use this to clean up resources that shouldn't persist across rebuilds-close database connections,
+Use this to clean up resources that shouldn't persist across rebuilds - close database connections,
 shut down WebSocket servers, clear timers, or release any other resources that would otherwise leak.
 
 Without proper cleanup, repeated rebuilds during development can leave orphaned connections or processes that consume resources.

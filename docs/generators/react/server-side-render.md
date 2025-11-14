@@ -254,7 +254,7 @@ based on application requirements.
 Generate your SSR bundle using the standard build command:
 
 ```sh
-pnpm build @front
+pnpm build
 ```
 
 This produces an SSR-ready bundle at `dist/@front/ssr/` containing

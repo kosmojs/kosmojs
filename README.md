@@ -27,33 +27,48 @@ It's a **structured Vite template** that gives your Vite project a scalable shap
 ### 1. Create a new `KosmoJS` project:
 
 ```sh
-npx kosmojs@latest
+npx kosmojs app  # or any name for your project
 ```
 
-### 2. Create a source folder
-
-Navigate to your app dir and run `npx kosmojs` again:
+After the project is created, navigate to your app directory:
 
 ```sh
-cd ./your-app-name
-npx kosmojs
+cd ./app
 ```
 
-### 3. Install dependencies with your preferred package manager:
+All subsequent operations run from inside this directory.
+
+### 2. Install dependencies
+
+Use your favorite package manager:
 
 ```sh
 pnpm install
 # or `npm install` / `yarn install`
 ```
 
-### 4. Start the Dev Server
+### 3. Create a source folder
+
+```sh
+pnpm +folder
+# or `npm run +folder` / `yarn +folder`
+```
+
+The source folder may have added new dependencies. Run the package manager again:
+
+```sh
+pnpm install
+# or `npm install` / `yarn install`
+```
+
+### 4. Start the dev server
 
 ```sh
 pnpm dev
 # or `npm run dev` / `yarn dev`
 ```
 
-Each source folder runs on its own port with own baseurl.
+Each source folder runs on its own port with its own base URL.
 
 📘 [Learn more](https://kosmojs.dev/start)
 
@@ -95,12 +110,12 @@ Each source folder runs on its own port with own baseurl.
 ## 🛠️ Contributing
 
 Contributions are welcome!
-Check out the [issues](https://github.com/kosmojs/kosmojs/issues) and submit PRs.
+Check out the [issues](https://github.com/kosmojs/kosmo/issues) and submit PRs.
 Please follow the project's coding style and include tests when possible.
 
 ---
 
 ## 📄 License
 
-MIT © [Slee Woo](https://github.com/kosmojs/kosmojs/blob/main/LICENSE)
+MIT © [Slee Woo](https://github.com/kosmojs/kosmo/blob/main/LICENSE)
 

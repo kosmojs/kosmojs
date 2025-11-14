@@ -206,10 +206,10 @@ but the implementation details are yours to choose based on your application's n
 Build your SSR application with the standard build command:
 
 ```sh
-pnpm build @front
+pnpm build
 ```
 
-This creates an SSR bundle in `dist/@front/ssr/` containing an `index.js` file ready to run in production.
+This creates an SSR bundle in `dist/SOURCE_FOLDER/ssr/` containing an `index.js` file ready to run in production.
 
 ## 🧪 Testing the SSR Build Locally
 
