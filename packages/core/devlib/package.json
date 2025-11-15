@@ -26,14 +26,12 @@
   },
   "dependencies": {
     "crc": "^4.3.2",
-    "fs-extra": "^11.3.2",
     "handlebars": "^4.7.8",
     "koa": "^3.1.1",
     "koa-compose": "^4.1.0"
   },
   "devDependencies": {
     "@kosmojs/config": "workspace:^",
-    "@types/fs-extra": "^11.0.4",
     "@types/koa": "^3.0.1",
     "@types/koa-compose": "^3.2.9",
     "@types/koa__router": "^12.0.5",

@@ -1,8 +1,10 @@
-import { join } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
 import crc from "crc/crc32";
-import fsx from "fs-extra";
 import handlebars from "handlebars";
+
+import { pathExists } from "./paths";
 
 export type Options = { noEscape?: boolean };
 
@@ -53,12 +55,12 @@ export const renderToFile = async <Context = object>(
    * Two fs calls (exists + read) are worth it to avoid touching the file
    * and triggering watchers unnecessarily.
    * */
-  if (await fsx.exists(file)) {
+  if (await pathExists(file)) {
     const { overwrite = true } = { ...options };
     if (overwrite === false) {
       return;
     }
-    const fileContent = await fsx.readFile(file, "utf8");
+    const fileContent = await readFile(file, "utf8");
     if (typeof overwrite === "function" && !overwrite(fileContent)) {
       return;
     }
@@ -67,7 +69,8 @@ export const renderToFile = async <Context = object>(
     }
   }
 
-  await fsx.outputFile(file, content, "utf8");
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, content, "utf8");
 };
 
 export const renderFactory = (outdir: string, options?: FactoryOptions) => {

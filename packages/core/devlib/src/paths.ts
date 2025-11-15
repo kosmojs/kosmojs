@@ -1,3 +1,4 @@
+import { access, constants } from "node:fs/promises";
 import { join } from "node:path";
 
 import { defaults } from "./defaults";
@@ -41,4 +42,13 @@ export const pathResolver = ({
         : join(dirname, ...file);
     },
   };
+};
+
+export const pathExists = async (path: string): Promise<boolean> => {
+  try {
+    await access(path, constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
 };

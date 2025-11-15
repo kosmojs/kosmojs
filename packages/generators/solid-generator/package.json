@@ -23,12 +23,10 @@
   "dependencies": {
     "@kosmojs/devlib": "workspace:^",
     "esbuild": "^0.27.0",
-    "fs-extra": "^11.3.2",
     "picomatch": "^4.0.3"
   },
   "devDependencies": {
     "@kosmojs/config": "workspace:^",
-    "@types/fs-extra": "^11.0.4",
     "@types/picomatch": "^4.0.2",
     "vite": "^7.2.2"
   },

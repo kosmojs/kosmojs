@@ -22,12 +22,10 @@
   },
   "dependencies": {
     "@kosmojs/devlib": "workspace:^",
-    "fs-extra": "^11.3.2",
     "picomatch": "^4.0.3"
   },
   "devDependencies": {
     "@kosmojs/config": "workspace:^",
-    "@types/fs-extra": "^11.0.4",
     "@types/picomatch": "^4.0.2"
   },
   "peerDependencies": {

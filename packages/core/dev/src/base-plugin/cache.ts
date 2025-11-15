@@ -1,7 +1,7 @@
-import { resolve } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
 
 import crc from "crc/crc32";
-import fsx from "fs-extra";
 
 /**
  * Import from published package to ensure correct version at runtime.
@@ -9,7 +9,7 @@ import fsx from "fs-extra";
  * import resolves to the actual published package.json.
  * */
 import self from "@kosmojs/dev/package.json" with { type: "json" };
-import { type ApiRoute, pathResolver } from "@kosmojs/devlib";
+import { type ApiRoute, pathExists, pathResolver } from "@kosmojs/devlib";
 
 export type Cache = {
   hash: number;
@@ -46,9 +46,9 @@ export const cacheFactory = (
   const getCache = async (opt?: {
     validate?: boolean;
   }): Promise<Cache | undefined> => {
-    if (await fsx.exists(cacheFile)) {
+    if (await pathExists(cacheFile)) {
       try {
-        const cache = JSON.parse(await fsx.readFile(cacheFile, "utf8"));
+        const cache = JSON.parse(await readFile(cacheFile, "utf8"));
         return opt?.validate //
           ? validateCache(cache)
           : cache;
@@ -79,7 +79,8 @@ export const cacheFactory = (
 
     const cache = { ...rest, hash, referencedFiles };
 
-    await fsx.outputJson(cacheFile, cache, { spaces: 2 });
+    await mkdir(dirname(cacheFile), { recursive: true });
+    await writeFile(cacheFile, JSON.stringify(cache, null, 2), "utf8");
 
     return cache;
   };
@@ -130,7 +131,7 @@ const generateFileHash = async (
 ): Promise<number> => {
   let fileContent: string | undefined;
   try {
-    fileContent = await fsx.readFile(file, "utf8");
+    fileContent = await readFile(file, "utf8");
   } catch (_e) {
     // file could be deleted since last build
     return 0;

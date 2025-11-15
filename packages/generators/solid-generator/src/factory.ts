@@ -2,7 +2,6 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { styleText } from "node:util";
 
-import fsx from "fs-extra";
 import picomatch, { type Matcher } from "picomatch";
 
 import {
@@ -10,6 +9,7 @@ import {
   type GeneratorFactory,
   type PageRoute,
   type PathToken,
+  pathExists,
   pathResolver,
   type RouteResolverEntry,
   render,
@@ -56,7 +56,7 @@ export const factory: GeneratorFactory<Options> = async (
   const { resolve } = pathResolver({ appRoot, sourceFolder });
 
   const tsconfigFile = join(appRoot, "tsconfig.json");
-  const tsconfigExists = await fsx.exists(tsconfigFile);
+  const tsconfigExists = await pathExists(tsconfigFile);
 
   if (!tsconfigExists) {
     throw new Error("SolidGenerator: missing tsconfig.json file");
