@@ -27,7 +27,8 @@ It's a **structured Vite template** that gives your Vite project a scalable shap
 ### 1. Create a new `KosmoJS` project:
 
 ```sh
-npx kosmojs app  # or any name for your project
+pnpm dlx kosmojs app # or any name for your project
+# or `npx kosmojs app` / `yarn dlx kosmojs app`
 ```
 
 After the project is created, navigate to your app directory:

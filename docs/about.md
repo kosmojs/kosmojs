@@ -38,7 +38,7 @@ particularly as applications grow and multiple concerns need to coexist cleanly.
 
 **Start building with better structure:**
 
-Run `npx kosmojs` and experience how much clearer full-stack development becomes
+Try `KosmoJS` and experience how much clearer full-stack development becomes
 when separation of concerns is the default, not something you have to enforce yourself.
 
 <div class="text-center">

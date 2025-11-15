@@ -16,9 +16,19 @@ In just a few commands, you'll have a fully-configured Vite project ready to sca
 
 ## 1. Create a new `KosmoJS` project:
 
-```sh
-npx kosmojs app  # or any name for your project
+::: code-group
+```sh [pnpm]
+pnpm dlx kosmojs app # or any name for your project
 ```
+
+```sh [npm]
+npx kosmojs app # or any name for your project
+```
+
+```sh [yarn]
+yarn dlx kosmojs app # or any name for your project
+```
+:::
 
 After the project is created, navigate to your app directory:
 
