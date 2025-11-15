@@ -94,7 +94,7 @@ export const validatePort = (port: string | number | undefined) => {
 export const assertNoError = (validator: () => string | undefined) => {
   const error = validator();
   if (error) {
-    throw new Error(error);
+    throw new Error(`${styleText("red", "✗ ERROR")}: ${error}`);
   }
 };
 

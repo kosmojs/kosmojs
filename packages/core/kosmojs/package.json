@@ -10,48 +10,15 @@
   "files": [
     "pkg/*"
   ],
-  "bin": "./pkg/project.js",
-  "exports": {
-    "./cli": {
-      "types": "./pkg/src/cli.d.ts",
-      "default": "./pkg/cli.js"
-    },
-    "./package.json": "./package.json"
-  },
+  "bin": "./pkg/cli.js",
   "scripts": {
-    "test": "vitest --root ../../.. --project core/kosmojs",
-    "prebuild": "rsync -av --delete src/templates pkg",
-    "build": "esbuilder src/project.ts src/cli.ts -s '@/scripts/!(cleanup)*'",
-    "postbuild": "chmod +x pkg/project.js"
+    "build": "esbuilder src/cli.ts",
+    "postbuild": "chmod +x pkg/cli.js"
   },
   "dependencies": {
-    "@kosmojs/devlib": "workspace:^",
-    "@kosmojs/biome-formatter": "workspace:^",
-    "concurrently": "^9.2.1",
-    "globby": "^15.0.0",
-    "prompts": "^2.4.2"
+    "@kosmojs/dev": "workspace:^"
   },
   "devDependencies": {
-    "@kosmojs/api": "workspace:^",
-    "@kosmojs/config": "workspace:^",
-    "@solidjs/router": "^0.15.4",
-    "@types/koa": "^3.0.1",
-    "@types/koa__router": "^12.0.5",
-    "@types/node": "^24.10.1",
-    "@types/prompts": "^2.4.9",
-    "@types/qs": "^6.14.0",
-    "@types/react": "^19.2.3",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "esbuild": "^0.27.0",
-    "qs": "^6.14.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router": "^7.9.5",
-    "solid-js": "^1.9.10",
-    "tslib": "^2.8.1",
-    "typescript": "^5.9.3",
-    "vite": "^7.2.2",
-    "vite-plugin-solid": "^2.11.10"
+    "@kosmojs/config": "workspace:^"
   }
 }

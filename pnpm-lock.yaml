@@ -122,9 +122,6 @@ importers:
       '@kosmojs/api-generator':
         specifier: workspace:^
         version: link:../../generators/api-generator
-      '@kosmojs/config':
-        specifier: workspace:^
-        version: link:../config
       '@kosmojs/devlib':
         specifier: workspace:^
         version: link:../devlib
@@ -134,6 +131,9 @@ importers:
       chokidar:
         specifier: ^4.0.3
         version: 4.0.3
+      concurrently:
+        specifier: ^9.2.1
+        version: 9.2.1
       crc:
         specifier: ^4.3.2
         version: 4.3.2
@@ -146,15 +146,15 @@ importers:
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
-      kosmojs:
-        specifier: workspace:^
-        version: link:../kosmojs
       ora:
         specifier: ^9.0.0
         version: 9.0.0
       picomatch:
         specifier: ^4.0.3
         version: 4.0.3
+      prompts:
+        specifier: ^2.4.2
+        version: 2.4.2
       tfusion:
         specifier: ^0.0.23
         version: 0.0.23
@@ -168,18 +168,66 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
     devDependencies:
+      '@kosmojs/config':
+        specifier: workspace:^
+        version: link:../config
+      '@solidjs/router':
+        specifier: ^0.15.4
+        version: 0.15.4(solid-js@1.9.10)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
       '@types/koa':
         specifier: ^3.0.1
         version: 3.0.1
+      '@types/koa__router':
+        specifier: ^12.0.5
+        version: 12.0.5
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.1
       '@types/picomatch':
         specifier: ^4.0.2
         version: 4.0.2
+      '@types/prompts':
+        specifier: ^2.4.9
+        version: 2.4.9
+      '@types/qs':
+        specifier: ^6.14.0
+        version: 6.14.0
+      '@types/react':
+        specifier: ^19.2.3
+        version: 19.2.3
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.3)
+      '@vitejs/plugin-react':
+        specifier: ^5.1.1
+        version: 5.1.1(vite@7.2.2(@types/node@24.10.1)(yaml@2.8.1))
+      qs:
+        specifier: ^6.14.0
+        version: 6.14.0
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+      react-router:
+        specifier: ^7.9.5
+        version: 7.9.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      solid-js:
+        specifier: ^1.9.10
+        version: 1.9.10
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
       vite:
         specifier: ^7.2.2
         version: 7.2.2(@types/node@24.10.1)(yaml@2.8.1)
+      vite-plugin-solid:
+        specifier: ^2.11.10
+        version: 2.11.10(solid-js@1.9.10)(vite@7.2.2(@types/node@24.10.1)(yaml@2.8.1))
 
   packages/core/devlib:
     dependencies:
@@ -239,85 +287,13 @@ importers:
 
   packages/core/kosmojs:
     dependencies:
-      '@kosmojs/biome-formatter':
+      '@kosmojs/dev':
         specifier: workspace:^
-        version: link:../../formatters/biome-formatter
-      '@kosmojs/devlib':
-        specifier: workspace:^
-        version: link:../devlib
-      concurrently:
-        specifier: ^9.2.1
-        version: 9.2.1
-      globby:
-        specifier: ^15.0.0
-        version: 15.0.0
-      prompts:
-        specifier: ^2.4.2
-        version: 2.4.2
+        version: link:../dev
     devDependencies:
-      '@kosmojs/api':
-        specifier: workspace:^
-        version: link:../api
       '@kosmojs/config':
         specifier: workspace:^
         version: link:../config
-      '@solidjs/router':
-        specifier: ^0.15.4
-        version: 0.15.4(solid-js@1.9.10)
-      '@types/koa':
-        specifier: ^3.0.1
-        version: 3.0.1
-      '@types/koa__router':
-        specifier: ^12.0.5
-        version: 12.0.5
-      '@types/node':
-        specifier: ^24.10.1
-        version: 24.10.1
-      '@types/prompts':
-        specifier: ^2.4.9
-        version: 2.4.9
-      '@types/qs':
-        specifier: ^6.14.0
-        version: 6.14.0
-      '@types/react':
-        specifier: ^19.2.3
-        version: 19.2.3
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.3)
-      '@vitejs/plugin-react':
-        specifier: ^5.1.1
-        version: 5.1.1(vite@7.2.2(@types/node@24.10.1)(yaml@2.8.1))
-      esbuild:
-        specifier: ^0.27.0
-        version: 0.27.0
-      qs:
-        specifier: ^6.14.0
-        version: 6.14.0
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-      react-router:
-        specifier: ^7.9.5
-        version: 7.9.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      solid-js:
-        specifier: ^1.9.10
-        version: 1.9.10
-      tslib:
-        specifier: ^2.8.1
-        version: 2.8.1
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vite:
-        specifier: ^7.2.2
-        version: 7.2.2(@types/node@24.10.1)(yaml@2.8.1)
-      vite-plugin-solid:
-        specifier: ^2.11.10
-        version: 2.11.10(solid-js@1.9.10)(vite@7.2.2(@types/node@24.10.1)(yaml@2.8.1))
 
   packages/formatters/biome-formatter:
     dependencies:
@@ -1387,10 +1363,6 @@ packages:
     resolution: {integrity: sha512-rO92VvpgMc3kfiTjGT52LEtJ8Yc5kCWhZjLQ3LwlA4pSgPpQO7bVpYXParOD8Jwf+cVQECJo3yP/4I8aZtUQTQ==}
     engines: {node: '>=18'}
 
-  '@sindresorhus/merge-streams@4.0.0':
-    resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
-    engines: {node: '>=18'}
-
   '@solidjs/router@0.15.3':
     resolution: {integrity: sha512-iEbW8UKok2Oio7o6Y4VTzLj+KFCmQPGEpm1fS3xixwFBdclFVBvaQVeibl1jys4cujfAK5Kn6+uG2uBm3lxOMw==}
     peerDependencies:
@@ -2256,10 +2228,6 @@ packages:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
 
-  globby@15.0.0:
-    resolution: {integrity: sha512-oB4vkQGqlMl682wL1IlWd02tXCbquGWM4voPEI85QmNKCaw8zGTm1f1rubFgkg3Eli2PtKlFgrnmUqasbQWlkw==}
-    engines: {node: '>=20'}
-
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -2361,10 +2329,6 @@ packages:
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
-    engines: {node: '>= 4'}
-
-  ignore@7.0.5:
-    resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
   immer@9.0.21:
@@ -2968,10 +2932,6 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  path-type@6.0.0:
-    resolution: {integrity: sha512-Vj7sf++t5pBD637NSfkxpHSMfWaeig5+DKWLhcqIYx6mWQz5hdJTGDVMQiJcw1ZYkhs7AazKDGpRVji1LJCZUQ==}
-    engines: {node: '>=18'}
-
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
@@ -3245,10 +3205,6 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  slash@5.1.0:
-    resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
-    engines: {node: '>=14.16'}
-
   solid-js@1.9.10:
     resolution: {integrity: sha512-Coz956cos/EPDlhs6+jsdTxKuJDPT7B5SVIWgABwROyxjY7Xbr8wkzD68Et+NxnV7DLJ3nJdAC2r9InuV/4Jew==}
 
@@ -3461,10 +3417,6 @@ packages:
   undici@7.16.0:
     resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
     engines: {node: '>=20.18.1'}
-
-  unicorn-magic@0.3.0:
-    resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
-    engines: {node: '>=18'}
 
   universalify@0.1.2:
     resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
@@ -4467,8 +4419,6 @@ snapshots:
   '@sec-ant/readable-stream@0.4.1': {}
 
   '@sindresorhus/is@7.1.1': {}
-
-  '@sindresorhus/merge-streams@4.0.0': {}
 
   '@solidjs/router@0.15.3(solid-js@1.9.10)':
     dependencies:
@@ -5585,15 +5535,6 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
-  globby@15.0.0:
-    dependencies:
-      '@sindresorhus/merge-streams': 4.0.0
-      fast-glob: 3.3.3
-      ignore: 7.0.5
-      path-type: 6.0.0
-      slash: 5.1.0
-      unicorn-magic: 0.3.0
-
   gopd@1.2.0: {}
 
   got@14.6.3:
@@ -5714,8 +5655,6 @@ snapshots:
       safer-buffer: 2.1.2
 
   ignore@5.3.2: {}
-
-  ignore@7.0.5: {}
 
   immer@9.0.21: {}
 
@@ -6208,8 +6147,6 @@ snapshots:
 
   path-type@4.0.0: {}
 
-  path-type@6.0.0: {}
-
   pathe@2.0.3: {}
 
   picocolors@1.1.1: {}
@@ -6494,8 +6431,6 @@ snapshots:
 
   slash@3.0.0: {}
 
-  slash@5.1.0: {}
-
   solid-js@1.9.10:
     dependencies:
       csstype: 3.1.3
@@ -6716,8 +6651,6 @@ snapshots:
   undici-types@7.16.0: {}
 
   undici@7.16.0: {}
-
-  unicorn-magic@0.3.0: {}
 
   universalify@0.1.2: {}
 

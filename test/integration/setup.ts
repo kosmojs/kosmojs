@@ -8,12 +8,12 @@ import { chromium } from "playwright";
 import { build, createServer } from "vite";
 
 import routesFactory from "~/core/dev/src/base-plugin/routes";
-import { defaults, type PageRoute } from "~/core/devlib/src";
 import {
   createProject,
   createSourceFolder,
   type FRAMEWORK_OPTIONS,
-} from "~/core/kosmojs/src";
+} from "~/core/dev/src/cli";
+import { defaults, type PageRoute } from "~/core/devlib/src";
 
 import testRoutes from "./routes";
 

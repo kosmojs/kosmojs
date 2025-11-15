@@ -31,11 +31,10 @@ export default defineConfig({
   reporters: ["verbose"],
   test: {
     projects: [
-      setupFactory("core/kosmojs", {
-        setupFiles: ["packages/core/kosmojs/test/setup.ts"],
-      }),
       setupFactory("core/api"),
-      setupFactory("core/dev"),
+      setupFactory("core/dev", {
+        setupFiles: ["packages/core/dev/test/setup.ts"],
+      }),
       setupFactory("core/devlib"),
       setupFactory("core/fetch", {
         setupFiles: ["packages/core/fetch/test/setup.ts"],

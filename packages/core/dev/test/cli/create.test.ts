@@ -2,11 +2,11 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { relative, resolve } from "node:path";
 
-import { globby } from "globby";
+import { glob } from "tinyglobby";
 import { describe, expect, it, test } from "vitest";
 
-import type { Project, SourceFolder } from "@/base";
-import { createProject, createSourceFolder } from "@/factory";
+import type { Project, SourceFolder } from "@/cli/base";
+import { createProject, createSourceFolder } from "@/cli/factory";
 
 describe("Create API", () => {
   it("should create default project", async (ctx) => {
@@ -72,7 +72,7 @@ const cliFactory = async (project: Project) => {
   const tempDir = await mkdtemp(resolve(tmpdir(), ".kosmojs-"));
 
   const generateSnapshot = async (patterns: Array<string> = ["**/*"]) => {
-    const files = await globby(patterns, {
+    const files = await glob(patterns, {
       cwd: resolve(tempDir, project.name),
       absolute: true,
       dot: true,

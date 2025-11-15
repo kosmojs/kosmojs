@@ -2,10 +2,10 @@
 
 TODO: Add package description
 
-## Create a new Project (or a new Source Folder if inside app dir)
+## Create a new Project
 
 ```sh
-npx kosmojs
+npx kosmojs app  # or any name for your project
 ```
 
 ## Documentation

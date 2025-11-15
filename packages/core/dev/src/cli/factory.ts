@@ -5,12 +5,11 @@ import { resolve } from "node:path";
  * Import from published package to ensure correct version at runtime.
  * Local import would be bundled with pre-bump version; this external
  * import resolves to the actual published package.json.
- * INFO: For best compatibility, all packages should share the same version as the `kosmojs` package.
+ * INFO: For best compatibility, all packages should share the same version.
  * When bumping the version (even a patch) for a single package, bump it for all packages
  * to keep versions fully synchronized across the project.
  * */
-import self from "kosmojs/package.json" with { type: "json" };
-
+import self from "@kosmojs/dev/package.json" with { type: "json" };
 import { defaults, renderToFile } from "@kosmojs/devlib";
 
 import {
@@ -85,9 +84,9 @@ export const createProject = async (
       "@kosmojs/dev": SEMVER,
       "@types/node": self.devDependencies["@types/node"],
       "@types/qs": self.devDependencies["@types/qs"],
-      esbuild: self.devDependencies.esbuild,
+      esbuild: self.dependencies.esbuild,
       tslib: self.devDependencies.tslib,
-      typescript: self.devDependencies.typescript,
+      typescript: self.dependencies.typescript,
       vite: self.devDependencies.vite,
       ...assets?.devDependencies,
     },
