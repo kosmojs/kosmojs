@@ -52,8 +52,16 @@ export default defineConfig({
             link: "/generators/react/intro",
           },
           {
-            text: "🔹 OpenAPI",
-            link: "/generators/openapi/intro",
+            text: "🔹 Vue",
+            link: "/generators/vue/intro",
+          },
+          {
+            items: [
+              {
+                text: "OpenAPI",
+                link: "/generators/openapi/intro",
+              },
+            ],
           },
           {
             items: [
@@ -167,6 +175,46 @@ export default defineConfig({
               text: "💡 Best Practices",
               docFooterText: "💡 React - Best Practices",
               link: "/generators/react/best-practices",
+            },
+          ],
+        },
+        {
+          text: "Vue Generator",
+          collapsed: false,
+          items: [
+            {
+              text: "🛠 Install / Setup",
+              docFooterText: "🛠 SolidJS - Install / Setup",
+              link: "/generators/vue/intro",
+            },
+            {
+              text: "🏗 Application",
+              link: "/generators/vue/application",
+            },
+            {
+              text: "🛣 Automated Routing",
+              link: "/generators/vue/routing",
+            },
+            {
+              text: "⚡ Server-Side Render",
+              link: "/generators/vue/server-side-render",
+            },
+            {
+              text: "🧭 Link Navigation",
+              link: "/generators/vue/link",
+            },
+            {
+              text: "🔧 Utilities",
+              link: "/generators/vue/utilities",
+            },
+            {
+              text: "🎨 Custom Templates",
+              link: "/generators/vue/custom-templates",
+            },
+            {
+              text: "💡 Best Practices",
+              docFooterText: "💡 SolidJS - Best Practices",
+              link: "/generators/vue/best-practices",
             },
           ],
         },
