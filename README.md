@@ -15,7 +15,7 @@ It's a **structured Vite template** that gives your `Vite` project a scalable sh
 
 * Multiple **source folders** for distinct areas (website, admin dashboard, API).
 * Each folder splits into **`api/` and `pages/`**, creating a clean boundary between server and client.
-* **Generators** that produce validation schemas, fetch clients, and OpenAPI specs from your `TypeScript` types.
+* **Generators** that produce validation schemas, fetch clients, and OpenAPI specs from your types.
 * **Framework freedom** - works with `SolidJS`, `React`, `Vue`, `Svelte`, or anything `Vite` supports.
 
 📘 [Learn more](https://kosmojs.dev/about)
