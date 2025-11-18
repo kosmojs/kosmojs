@@ -1,6 +1,7 @@
 ---
 title: Auto-Generated Route Content
-description: KosmoJS automatically generates boilerplate code for new routes with context-aware templates for API endpoints using defineRoute and framework-specific page components.
+description: KosmoJS automatically generates boilerplate code for new routes with context-aware templates
+    for API endpoints using defineRoute and framework-specific page components.
 head:
   - - meta
     - name: keywords

@@ -1,6 +1,7 @@
 ---
 title: Dynamic Route Parameters
-description: Handle dynamic URL segments with required [id], optional [[id]], and rest [...path] parameters. SolidStart-inspired syntax that works identically for API routes and client pages.
+description: Handle dynamic URL segments with required [id], optional [[id]], and rest [...path] parameters.
+    SolidStart-inspired syntax that works identically for API routes and client pages.
 head:
   - - meta
     - name: keywords

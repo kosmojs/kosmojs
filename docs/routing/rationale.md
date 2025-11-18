@@ -1,6 +1,7 @@
 ---
 title: Directory vs File-Based Routing
-description: Understanding why directory-based routing scales better than file-based routing for organizing large applications with clear navigation, colocalization, and visual hierarchy.
+description: Understanding why directory-based routing scales better than file-based routing
+    for organizing large applications with clear navigation, colocalization, and visual hierarchy.
 head:
   - - meta
     - name: keywords
@@ -53,19 +54,31 @@ products/
 
 The benefits become apparent at scale:
 
-**Crystal clear navigation:** Looking for the JSON endpoint? There's an `index.json/` folder right there. The folder structure **is** the documentation.
+**Crystal clear navigation:**
+Looking for the JSON endpoint? There's an `index.json/` folder right there.
+The folder structure **is** the documentation.
 
-**Natural colocalization:** Each route has its own space for related files – validators, helpers, types, tests. Everything that belongs together stays together.
+**Natural colocalization:**
+Each route has its own space for related files – validators, helpers, types, tests.
+Everything that belongs together stays together.
 
-**Visual hierarchy:** The tree structure makes your API surface immediately visible. You can understand the entire routing structure at a glance.
+**Visual hierarchy:**
+The tree structure makes your API surface immediately visible.
+You can understand the entire routing structure at a glance.
 
-**Grep-friendly:** Searching for `index.json` instantly finds the folder. No ambiguity, no guessing about file naming conventions.
+**Grep-friendly:**
+Searching for `index.json` instantly finds the folder.
+No ambiguity, no guessing about file naming conventions.
 
-**Scales gracefully:** At 10 routes, the extra folders seem like overhead. At 100 routes, they're a lifesaver. The organizational benefits compound over time.
+**Scales gracefully:**
+At 10 routes, the extra folders seem like overhead. At 100 routes, they're a lifesaver.
+The organizational benefits compound over time.
 
 ### ⚖️ The Trade-off
 
-Yes, directory-based routing is slightly more verbose upfront. You create a folder even when you only have one file inside it. But this small initial cost pays enormous dividends:
+Yes, directory-based routing is slightly more verbose upfront.
+You create a folder even when you only have one file inside it.
+But this small initial cost pays enormous dividends:
 
 - Six months later, you can navigate the codebase instantly
 - New team members understand the structure immediately

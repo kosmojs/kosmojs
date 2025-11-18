@@ -1,13 +1,14 @@
 ---
 title: Directory-Based Routing
-description: KosmoJS uses directory-based routing to map file system structure directly to URL paths. Folder names become path segments with index.ts files defining endpoints and components.
+description: KosmoJS uses directory-based routing to map file system structure directly to URL paths.
+    Folder names become path segments with index files defining endpoints and components.
 head:
   - - meta
     - name: keywords
       content: directory-based routing, url mapping, api routes, page routes, route organization
 ---
 
-`KosmoJS` uses directory-based routing to map your file system structure directly to URL paths.
+`KosmoJS` uses directory-based routing to map your file system structure to URL paths.
 
 This approach eliminates the need for separate routing configuration files
 and ensures that your routes are always in sync with your actual code structure.
@@ -17,7 +18,7 @@ When you create a folder and file, you've created a route - no additional steps 
 ## 🛣️ How Directory-Based Routing Works
 
 The fundamental principle is simple: folder names become path segments in your URLs,
-and each route requires an `index.ts` file that serves as the actual endpoint or component.
+and each route requires an `index` file that serves as the actual endpoint or component.
 
 This pattern applies consistently to both API routes (in your `api` directory)
 and client pages (in your `pages` directory).
@@ -41,11 +42,11 @@ api/
 
 pages/
   index/
-    index.ts          → /
+    index.tsx          → /
   users/
-    index.ts          → /users
+    index.tsx          → /users
     [id]/
-      index.ts        → /users/:id
+      index.tsx        → /users/:id
 ```
 
 Notice how the structure mirrors itself between API and pages.
@@ -56,7 +57,7 @@ The parallel structure makes it easy to understand how your frontend and backend
 
 ## 📄 Route File Requirements
 
-Every route in `KosmoJS` is defined by an `index.ts` file within a folder.
+Every route in `KosmoJS` is defined by an `index` file within a folder.
 This file must export a default value - the specific format of that export
 depends on whether you're creating an API route or a client page.
 
