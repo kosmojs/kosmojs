@@ -219,7 +219,7 @@ export const pathFactory = (pathTokens: Array<PathToken>) => {
   return pathTokens
     .flatMap(({ path, param }) => {
       if (param?.isRest) {
-        return [`{*${param.name}}`];
+        return [`{/*${param.name}}`];
       }
       if (param?.isOptional) {
         return [`{/:${param.name}}`];
@@ -230,5 +230,6 @@ export const pathFactory = (pathTokens: Array<PathToken>) => {
       return path === "/" ? [] : path;
     })
     .join("/")
+    .replace(/\/\{/g, "{")
     .replace(/\+/g, "\\\\+");
 };

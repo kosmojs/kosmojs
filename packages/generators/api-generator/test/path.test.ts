@@ -23,13 +23,13 @@ describe("pathFactory", () => {
 
   test("optional params", () => {
     expect(pathFactory(pathTokensFactory("some/[[param]]"))).toEqual(
-      "some/{/:param}",
+      "some{/:param}",
     );
   });
 
   test("rest params", () => {
     expect(pathFactory(pathTokensFactory("some/[...param]"))).toEqual(
-      "some/{*param}",
+      "some{/*param}",
     );
   });
 
@@ -38,7 +38,7 @@ describe("pathFactory", () => {
       pathFactory(
         pathTokensFactory("some/[required]/with/[[optional]]/and/[...rest]"),
       ),
-    ).toEqual("some/:required/with/{/:optional}/and/{*rest}");
+    ).toEqual("some/:required/with{/:optional}/and{/*rest}");
   });
 
   test("index prefix replaced with /", () => {

@@ -4,6 +4,7 @@
   "files": {
     "includes": [
       "vitest.config.js",
+      "esbuilder/esbuilder.js",
       "docs/**/*.ts",
       "test/**/*.ts",
       "packages/*/*/{src,test}/**/*.ts",
@@ -56,6 +57,7 @@
   "overrides": [
     {
       "includes": [
+        "esbuilder/esbuilder.js",
         "./test/**/*.ts",
         "./packages/build/esbuilder/src/index.ts",
         "./packages/core/dev/src/base-plugin/api-handler.ts",
