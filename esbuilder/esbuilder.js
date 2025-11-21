@@ -1,5 +1,6 @@
 import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { parseArgs, styleText } from "node:util";
 
@@ -29,6 +30,10 @@ const { values, positionals } = parseArgs({
       multiple: true,
       short: "s",
     },
+    "external-exclude": {
+      type: "string",
+      multiple: true,
+    },
   },
   allowPositionals: true,
 });
@@ -39,7 +44,7 @@ if (!root) {
   throw styleText("red", "Could not detect workspace root");
 }
 
-const tsAsTextPlugin = () => {
+const loadAsTextPlugin = () => {
   const namespace = "load-as-text";
   const filter = /\?as=text$/;
   return {
@@ -119,11 +124,35 @@ for (const pattern of values.scripts.map(scriptPatternsMapper)) {
 
 const spinner = ora().start(positionals.join("; "));
 
+const plugins = [loadAsTextPlugin()];
+
+if (values["external-exclude"]?.length) {
+  const require = createRequire(import.meta.url);
+  plugins.push({
+    name: "external-exclude",
+    setup(build) {
+      build.onResolve({ filter: /.*/ }, (args) => {
+        if (values["external-exclude"].includes(args.path)) {
+          const resolved = require.resolve(args.path, {
+            paths: [args.resolveDir],
+          });
+          if (resolved) {
+            return {
+              path: resolved,
+              external: false,
+            };
+          }
+        }
+      });
+    },
+  });
+}
+
 try {
   await build({
     bundle: true,
     platform: "node",
-    plugins: [tsAsTextPlugin()],
+    plugins,
     target,
     format: "esm",
     packages: "external",
@@ -132,6 +161,7 @@ try {
     loader: { ".hbs": "text" },
     entryPoints: positionals,
     outdir: "./pkg",
+    legalComments: "inline",
   });
   spinner.succeed();
 } catch (error) {
