@@ -4,7 +4,10 @@ import { type BuildOptions, build as esbuild } from "esbuild";
 import { build, loadConfigFromFile, type Plugin } from "vite";
 
 import {
+  defaults,
   type GeneratorFactory,
+  type PageRoute,
+  type PathToken,
   pathResolver,
   renderToFile,
 } from "@kosmojs/devlib";
@@ -17,7 +20,62 @@ export const factory: GeneratorFactory = async ({
   outDir,
   command,
 }) => {
-  if (command === "build") {
+  const generatePathPattern = (tokens: PathToken[]): string => {
+    return tokens
+      .map(({ param, path }) => {
+        if (param?.isRest) {
+          return [`{/*${param.name}}`];
+        }
+        if (param?.isOptional) {
+          return [`{/:${param.name}}`];
+        }
+        if (param) {
+          return [`:${param.name}`];
+        }
+        return path === "/" ? [] : path;
+      })
+      .join("/")
+      .replace(/\/\{/g, "{")
+      .replace(/\+/g, "\\\\+");
+  };
+
+  /**
+   * Path Variation Generator
+   *   variations for a/b/c:
+   *   [ a/b/c ]
+   *   variations for a/b/[c]:
+   *   [ a/b/:c ]
+   *   variations for a/b/[[c]]:
+   *   [ a/b/{/:c}, a/b ]
+   *   variations for a/[b]/[[c]]:
+   *   [ a/:b/{/:c}, a/:b ]
+   *   variations for a/[[b]]/[[c]]:
+   *   [ a/{/:b}/{/:c}, a/{/:b}, a ]
+   * */
+  const generatePathVariations = (route: PageRoute) => {
+    return route.pathTokens.flatMap((e, i) => {
+      const next = route.pathTokens[i + 1];
+      return !next || next.param?.isOptional || next.param?.isRest
+        ? [generatePathPattern([...route.pathTokens.slice(0, i), e])]
+        : [];
+    });
+  };
+
+  const generateManifestPathVariations = (route: PageRoute) => {
+    return route.pathTokens.flatMap((e, i) => {
+      const next = route.pathTokens[i + 1];
+      return !next || next.param?.isOptional || next.param?.isRest
+        ? [
+            join(
+              defaults.pagesDir,
+              ...[...route.pathTokens.slice(0, i), e].map((e) => e.orig),
+            ),
+          ]
+        : [];
+    });
+  };
+
+  const generateLibFiles = async (routes: Array<PageRoute>) => {
     const { resolve } = pathResolver({ appRoot, sourceFolder });
 
     const viteConfig = await loadConfigFromFile(
@@ -44,14 +102,31 @@ export const factory: GeneratorFactory = async ({
         : [],
       build: {
         ssr: resolve("entryDir", "server.ts"),
+        ssrEmitAssets: false,
         outDir: join(outDir, "ssr"),
+        emptyOutDir: true,
         sourcemap: true,
+        // TODO: review this option when Vite switched to Rolldown
+        rollupOptions: {
+          output: {
+            entryFileNames: "app.js",
+          },
+        },
       },
     });
 
     const ssrLisbFile = resolve("libDir", sourceFolder, "{ssr}.ts");
 
     await renderToFile(ssrLisbFile, serverTpl, {
+      routes: routes.map((route) => {
+        return {
+          ...route,
+          pathVariations: JSON.stringify(generatePathVariations(route)),
+          manifestPathVariations: JSON.stringify(
+            generateManifestPathVariations(route),
+          ),
+        };
+      }),
       importPathmap: {
         config: join(sourceFolder, "config"),
       },
@@ -60,12 +135,20 @@ export const factory: GeneratorFactory = async ({
     await esbuild({
       ...esbuildOptions,
       bundle: true,
+      legalComments: "inline",
       entryPoints: [ssrLisbFile],
       outfile: join(outDir, "ssr", "index.js"),
     });
-  }
+  };
 
   return {
-    async watchHandler() {},
+    async watchHandler(entries, event) {
+      if (event || command !== "build") {
+        return;
+      }
+      await generateLibFiles(
+        entries.flatMap((e) => (e.kind === "page" ? [e.route] : [])),
+      );
+    },
   };
 };

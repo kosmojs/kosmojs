@@ -115,9 +115,11 @@ export const setupTestProject = async ({
       // INFO: wait for files to persist
       await new Promise((resolve) => setTimeout(resolve, 1_000));
 
-      const { server } = await import(
+      const { createServer } = await import(
         join(projectRoot, project.distDir, sourceFolder, "ssr/index.js")
       );
+
+      const server = await createServer();
 
       server.listen(port);
 
@@ -146,7 +148,6 @@ export const setupTestProject = async ({
       process.env.DEBUG
         ? {
             headless: false,
-            devtools: true,
           }
         : {},
     );
@@ -285,7 +286,7 @@ export const setupTestProject = async ({
     await page?.close();
     await browser?.close();
     await closeServer();
-    // await cleanup();
+    await cleanup();
     await new Promise((resolve) => setTimeout(resolve, 1_000));
   };
 

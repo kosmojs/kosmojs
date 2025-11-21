@@ -4,15 +4,21 @@ import { createStaticHandler } from "react-router";
 import Router, { routeStack } from "../router";
 import { baseurl } from "../config";
 
-const renderFactory: import("@kosmojs/dev").SSRFactory = async (url) => {
-  const handler = createStaticHandler(routeStack, { basename: baseurl });
-  const context = await handler.query(new Request(`http://localhost${url}`));
-  return {
-    renderToString() {
-      const html = renderToString(Router({ context } as never));
-      return { html };
-    },
-  };
-};
+export default {
+  async factory(url) {
+    const handler = createStaticHandler(routeStack, { basename: baseurl });
+    const context = await handler.query(new Request(`http://localhost${url}`));
 
-export default renderFactory;
+    return {
+      renderToString({ criticalCss }) {
+        const head = criticalCss
+          .map(({ text }) => `<style>${text}</style>`)
+          .join("");
+
+        const html = renderToString(Router({ context } as never));
+
+        return { head, html };
+      },
+    };
+  },
+} satisfies import("@kosmojs/dev").SSRSetup;

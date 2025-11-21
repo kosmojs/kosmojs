@@ -1,4 +1,4 @@
-export type { SSRFactory } from "@kosmojs/devlib";
+export type { SSRManifestEntry, SSRSetup } from "@kosmojs/devlib";
 
 export { default as apiGenerator } from "@kosmojs/api-generator";
 export { default as fetchGenerator } from "@kosmojs/fetch-generator";

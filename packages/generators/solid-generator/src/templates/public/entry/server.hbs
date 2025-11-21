@@ -2,14 +2,21 @@ import { renderToString, generateHydrationScript } from "solid-js/web";
 
 import Router from "../router";
 
-const renderFactory: import("@kosmojs/dev").SSRFactory = (url) => {
-  const head = generateHydrationScript()
-  return {
-    renderToString() {
-      const html = renderToString(() => Router({ url }));
-      return { head, html };
-    },
-  }
-};
+export default {
+  async factory(url) {
+    const hydrationScript = generateHydrationScript();
 
-export default renderFactory;
+    return {
+      renderToString({ criticalCss }) {
+        const head = criticalCss.reduce(
+          (head, { text }) => `${head}<style>${text}</style>`,
+          hydrationScript,
+        );
+
+        const html = renderToString(() => Router({ url }));
+
+        return { head, html };
+      },
+    };
+  },
+} satisfies import("@kosmojs/dev").SSRSetup;

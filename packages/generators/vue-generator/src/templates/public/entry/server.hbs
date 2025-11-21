@@ -4,20 +4,23 @@ import { renderToString } from "vue/server-renderer";
 import App from "../App.vue";
 import createRouter from "../router";
 
-const renderFactory: import("@kosmojs/dev").SSRFactory = async (url) => {
-  return {
-    async renderToString() {
-      const app = createSSRApp(App);
+export default {
+  async factory(url) {
+    const app = createSSRApp(App);
+    const router = await createRouter({ url });
 
-      const router = await createRouter({ url });
+    app.use(router);
 
-      app.use(router);
+    return {
+      async renderToString({ criticalCss }) {
+        const head = criticalCss
+          .map(({ text }) => `<style>${text}</style>`)
+          .join("");
 
-      const html = await renderToString(app);
+        const html = await renderToString(app);
 
-      return { html };
-    },
-  };
-};
-
-export default renderFactory;
+        return { head, html };
+      },
+    };
+  },
+} satisfies import("@kosmojs/dev").SSRSetup;
