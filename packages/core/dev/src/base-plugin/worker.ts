@@ -14,7 +14,7 @@ import {
   type WatchHandler,
 } from "@kosmojs/devlib";
 
-import routesFactory from "./routes";
+import routesFactory, { resolveRouteFile } from "./routes";
 import type { SpinnerFactory } from "./spinner";
 
 export type WorkerData = Omit<
@@ -71,12 +71,7 @@ const resolvedRoutes = new Map<
   RouteResolverEntry
 >();
 
-const {
-  //
-  resolvers,
-  resolversFactory,
-  resolveRouteFile,
-} = await routesFactory(resolvedOptions);
+const { resolvers, resolversFactory } = await routesFactory(resolvedOptions);
 
 const { resolve } = pathResolver({ appRoot, sourceFolder });
 
@@ -233,7 +228,7 @@ watcher.on("all", async (event, file) => {
     return;
   }
 
-  if (!resolveRouteFile(file)) {
+  if (!resolveRouteFile(file, { appRoot, sourceFolder })) {
     // not a route file
     return;
   }

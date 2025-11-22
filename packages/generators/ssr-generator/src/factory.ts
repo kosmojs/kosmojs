@@ -20,61 +20,6 @@ export const factory: GeneratorFactory = async ({
   outDir,
   command,
 }) => {
-  const generatePathPattern = (tokens: PathToken[]): string => {
-    return tokens
-      .map(({ param, path }) => {
-        if (param?.isRest) {
-          return [`{/*${param.name}}`];
-        }
-        if (param?.isOptional) {
-          return [`{/:${param.name}}`];
-        }
-        if (param) {
-          return [`:${param.name}`];
-        }
-        return path === "/" ? [] : path;
-      })
-      .join("/")
-      .replace(/\/\{/g, "{")
-      .replace(/\+/g, "\\\\+");
-  };
-
-  /**
-   * Path Variation Generator
-   *   variations for a/b/c:
-   *   [ a/b/c ]
-   *   variations for a/b/[c]:
-   *   [ a/b/:c ]
-   *   variations for a/b/[[c]]:
-   *   [ a/b/{/:c}, a/b ]
-   *   variations for a/[b]/[[c]]:
-   *   [ a/:b/{/:c}, a/:b ]
-   *   variations for a/[[b]]/[[c]]:
-   *   [ a/{/:b}/{/:c}, a/{/:b}, a ]
-   * */
-  const generatePathVariations = (route: PageRoute) => {
-    return route.pathTokens.flatMap((e, i) => {
-      const next = route.pathTokens[i + 1];
-      return !next || next.param?.isOptional || next.param?.isRest
-        ? [generatePathPattern([...route.pathTokens.slice(0, i), e])]
-        : [];
-    });
-  };
-
-  const generateManifestPathVariations = (route: PageRoute) => {
-    return route.pathTokens.flatMap((e, i) => {
-      const next = route.pathTokens[i + 1];
-      return !next || next.param?.isOptional || next.param?.isRest
-        ? [
-            join(
-              defaults.pagesDir,
-              ...[...route.pathTokens.slice(0, i), e].map((e) => e.orig),
-            ),
-          ]
-        : [];
-    });
-  };
-
   const generateLibFiles = async (routes: Array<PageRoute>) => {
     const { resolve } = pathResolver({ appRoot, sourceFolder });
 
@@ -151,4 +96,63 @@ export const factory: GeneratorFactory = async ({
       );
     },
   };
+};
+
+const generatePathPattern = (tokens: PathToken[]): string => {
+  return tokens
+    .map(({ param, path }) => {
+      if (param?.isRest) {
+        return [`{/*${param.name}}`];
+      }
+      if (param?.isOptional) {
+        return [`{/:${param.name}}`];
+      }
+      if (param) {
+        return [`:${param.name}`];
+      }
+      return path === "/" ? [] : path;
+    })
+    .join("/")
+    .replace(/\/\{/g, "{")
+    .replace(/\+/g, "\\\\+");
+};
+
+/**
+ * Path Variation Generator
+ *   variations for a/b/c:
+ *   [ a/b/c ]
+ *   variations for a/b/[c]:
+ *   [ a/b/:c ]
+ *   variations for a/b/[[c]]:
+ *   [ a/b/{/:c}, a/b ]
+ *   variations for a/[b]/[[c]]:
+ *   [ a/:b/{/:c}, a/:b ]
+ *   variations for a/[[b]]/[[c]]:
+ *   [ a/{/:b}/{/:c}, a/{/:b}, a ]
+ * */
+export const generatePathVariations = ({
+  pathTokens,
+}: Pick<PageRoute, "pathTokens">) => {
+  return pathTokens.flatMap((e, i) => {
+    const next = pathTokens[i + 1];
+    return !next || next.param?.isOptional || next.param?.isRest
+      ? [generatePathPattern([...pathTokens.slice(0, i), e])]
+      : [];
+  });
+};
+
+export const generateManifestPathVariations = ({
+  pathTokens,
+}: Pick<PageRoute, "pathTokens">) => {
+  return pathTokens.flatMap((e, i) => {
+    const next = pathTokens[i + 1];
+    return !next || next.param?.isOptional || next.param?.isRest
+      ? [
+          join(
+            defaults.pagesDir,
+            ...[...pathTokens.slice(0, i), e].map((e) => e.orig),
+          ),
+        ]
+      : [];
+  });
 };

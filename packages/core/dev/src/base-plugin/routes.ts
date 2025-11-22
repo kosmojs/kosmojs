@@ -23,9 +23,12 @@ import { cacheFactory } from "./cache";
 import resolvedTypesTpl from "./templates/resolved-types.hbs";
 import typesFileTpl from "./templates/types.hbs";
 
-export type Resolvers = Map<string, RouteResolver>;
+type Resolvers = Map<string, RouteResolver>;
 
-export type ResolveRouteFile = (file: string) =>
+type ResolveRouteFile = (
+  file: string,
+  opts: Pick<PluginOptionsResolved, "appRoot" | "sourceFolder">,
+) =>
   | [
       // Either `apiDir` or `pagesDir`
       folder: string,
@@ -34,16 +37,93 @@ export type ResolveRouteFile = (file: string) =>
     ]
   | undefined;
 
-export type ResolversFactory = (
+type ResolveRouteEntry = (
+  file: string,
+  opts: Pick<PluginOptionsResolved, "appRoot" | "sourceFolder">,
+) => RouteEntry | undefined;
+
+type ResolversFactory = (
   routeFiles: Array<string>,
 ) => Map<string, RouteResolver>;
+
+// Only `index.ts` files matter for API endpoints
+const API_INDEX_PATTERN = "index.ts";
+
+// Match component endpoints for Solid/React (.tsx) and Vue (.vue).
+const PAGE_INDEX_PATTERN = "index.{tsx,vue}";
+
+const ROUTE_FILE_PATTERNS = [
+  `${defaults.apiDir}/**/${API_INDEX_PATTERN}`,
+  `${defaults.pagesDir}/**/${PAGE_INDEX_PATTERN}`,
+];
+
+export const resolveRouteFile: ResolveRouteFile = (
+  file,
+  { appRoot, sourceFolder },
+) => {
+  const [_sourceFolder, folder, ...rest] = resolve(appRoot, file)
+    .replace(`${appRoot}/`, "")
+    .split("/");
+
+  /**
+   * Ensure the file:
+   * - is under the correct source root (`sourceFolder`)
+   * - belongs to a known route folder (`apiDir` or `pagesDir`)
+   * - is nested at least one level deep (not a direct child of the folder)
+   */
+  if (!folder || _sourceFolder !== sourceFolder || rest.length < 2) {
+    return;
+  }
+
+  return picomatch.isMatch(join(folder, ...rest), ROUTE_FILE_PATTERNS)
+    ? [folder, rest.join("/")]
+    : undefined;
+};
+
+export const resolveRouteEntry: ResolveRouteEntry = (
+  _file,
+  { appRoot, sourceFolder },
+) => {
+  const resolvedPaths = resolveRouteFile(_file, { appRoot, sourceFolder });
+
+  if (!resolvedPaths) {
+    return;
+  }
+
+  const [folder, file] = resolvedPaths;
+
+  const fileFullpath = join(appRoot, sourceFolder, folder, file);
+
+  const pathTokens = pathTokensFactory(dirname(file));
+
+  const name = pathTokens.map((e) => e.orig).join("/");
+
+  const importPath = dirname(file);
+
+  const importName = [
+    importPath
+      .split(/\[/)[0]
+      .replace(/^\W+|\W+$/g, "")
+      .replace(/\W+/g, "_"),
+    crc(importPath),
+  ].join("_");
+
+  return {
+    name,
+    folder,
+    file,
+    fileFullpath,
+    pathTokens,
+    importPath,
+    importName,
+  };
+};
 
 export default async (
   pluginOptions: PluginOptionsResolved,
 ): Promise<{
   resolvers: Resolvers;
   resolversFactory: ResolversFactory;
-  resolveRouteFile: ResolveRouteFile;
 }> => {
   const {
     appRoot,
@@ -68,75 +148,18 @@ export default async (
     refreshSourceFile,
   } = typeResolverFactory(pluginOptions);
 
-  const routeFilePatterns = [
-    `${defaults.apiDir}/**/index.ts`,
-    `${defaults.pagesDir}/**/index.{ts,tsx,vue}`,
-  ];
-
-  const resolveRouteFile: ResolveRouteFile = (file) => {
-    const [_sourceFolder, folder, ...rest] = resolve(appRoot, file)
-      .replace(`${appRoot}/`, "")
-      .split("/");
-
-    /**
-     * Ensure the file:
-     * - is under the correct source root (`sourceFolder`)
-     * - belongs to a known route folder (`apiDir` or `pagesDir`)
-     * - is nested at least one level deep (not a direct child of the folder)
-     */
-    if (!folder || _sourceFolder !== sourceFolder || rest.length < 2) {
-      return;
-    }
-
-    return picomatch.isMatch(join(folder, ...rest), routeFilePatterns)
-      ? [folder, rest.join("/")]
-      : undefined;
-  };
-
   const resolversFactory: ResolversFactory = (routeFiles) => {
     const resolvers = new Map<
       string, // fileFullpath
       RouteResolver
     >();
 
-    const entries: Array<RouteEntry> = routeFiles.flatMap((_file) => {
-      const resolvedPaths = resolveRouteFile(_file);
-
-      if (!resolvedPaths) {
-        return [];
-      }
-
-      const [folder, file] = resolvedPaths;
-
-      const fileFullpath = join(appRoot, sourceFolder, folder, file);
-
-      const pathTokens = pathTokensFactory(dirname(file));
-
-      const name = pathTokens.map((e) => e.orig).join("/");
-
-      const importPath = dirname(file);
-
-      const importName = [
-        importPath
-          .split(/\[/)[0]
-          .replace(/^\W+|\W+$/g, "")
-          .replace(/\W+/g, "_"),
-        crc(importPath),
-      ].join("_");
-
-      return [
-        {
-          name,
-          folder,
-          file,
-          fileFullpath,
-          pathTokens,
-          importPath,
-          importName,
-        },
-      ];
+    const entries: Array<RouteEntry> = routeFiles.flatMap((file) => {
+      const entry = resolveRouteEntry(file, pluginOptions);
+      return entry ? [entry] : [];
     });
 
+    // handle api routes
     for (const entry of entries.filter((e) => e.folder === defaults.apiDir)) {
       const {
         name,
@@ -310,6 +333,7 @@ export default async (
       resolvers.set(fileFullpath, { name, handler });
     }
 
+    // handle page routes
     for (const entry of entries.filter((e) => e.folder === defaults.pagesDir)) {
       const {
         //
@@ -348,19 +372,18 @@ export default async (
     return resolvers;
   };
 
-  const routeFiles = await glob(routeFilePatterns, {
+  const routeFiles = await glob(ROUTE_FILE_PATTERNS, {
     cwd: resolve(appRoot, sourceFolder),
     absolute: true,
     onlyFiles: true,
     ignore: [
-      `${defaults.apiDir}/index.ts`,
-      `${defaults.pagesDir}/index.ts{x,}`,
+      `${defaults.apiDir}/${API_INDEX_PATTERN}`,
+      `${defaults.pagesDir}/${PAGE_INDEX_PATTERN}`,
     ],
   });
 
   return {
     resolvers: resolversFactory(routeFiles),
     resolversFactory,
-    resolveRouteFile,
   };
 };

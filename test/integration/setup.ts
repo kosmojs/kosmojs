@@ -33,15 +33,21 @@ const baseURL = `http://localhost:${port}`;
 
 export { testRoutes };
 
-export const setupTestProject = async ({
-  framework,
-  frameworkOptions,
-  ssr,
-}: {
-  framework: Exclude<(typeof FRAMEWORK_OPTIONS)[number], "none">;
-  frameworkOptions?: Record<string, unknown>;
-  ssr?: boolean;
-}) => {
+export const setupTestProject = async (
+  {
+    framework,
+    frameworkOptions,
+    ssr,
+  }: {
+    framework: Exclude<(typeof FRAMEWORK_OPTIONS)[number], "none">;
+    frameworkOptions?: Record<string, unknown>;
+    ssr?: boolean;
+  },
+  onReady?: (p: {
+    projectRoot: string;
+    sourceFolderPath: string;
+  }) => void | Promise<void>,
+) => {
   const tempDir = await mkdtemp(resolve(tmpdir(), ".kosmojs-"));
   const projectRoot = resolve(tempDir, project.name);
   const sourceFolderPath = resolve(projectRoot, sourceFolder);
@@ -201,6 +207,13 @@ export const setupTestProject = async ({
     },
   );
 
+  if (onReady) {
+    await onReady({
+      projectRoot,
+      sourceFolderPath,
+    });
+  }
+
   await new Promise((resolve, reject) => {
     execFile(
       "pnpm",
@@ -268,7 +281,7 @@ export const setupTestProject = async ({
       await page.waitForSelector("body:has-text('')", {
         timeout: 1_000,
       });
-      maybeContent = await page.innerHTML("body");
+      maybeContent = await page.content();
     } else {
       maybeContent = await got(`${baseURL}/${path}`).text();
     }

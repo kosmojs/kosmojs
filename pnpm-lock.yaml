@@ -20,6 +20,9 @@ importers:
       cheerio:
         specifier: ^1.1.2
         version: 1.1.2
+      crc:
+        specifier: ^4.3.2
+        version: 4.3.2
       esbuild:
         specifier: ^0.27.0
         version: 0.27.0
@@ -445,6 +448,9 @@ importers:
       '@kosmojs/config':
         specifier: workspace:^
         version: link:../../core/config
+      '@kosmojs/dev':
+        specifier: workspace:^
+        version: link:../../core/dev
 
   packages/generators/typebox-generator:
     dependencies:

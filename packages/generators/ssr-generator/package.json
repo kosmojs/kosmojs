@@ -17,7 +17,8 @@
     }
   },
   "scripts": {
-    "build": "esbuilder src/index.ts"
+    "build": "esbuilder src/index.ts",
+    "test": "vitest --root ../../.. --project generators/ssr-generator"
   },
   "dependencies": {
     "@kosmojs/devlib": "workspace:^",
@@ -25,6 +26,7 @@
     "vite": "^7.2.2"
   },
   "devDependencies": {
+    "@kosmojs/dev": "workspace:^",
     "@kosmojs/config": "workspace:^"
   }
 }
