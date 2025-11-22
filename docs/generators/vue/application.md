@@ -16,20 +16,11 @@ ensuring a consistent structure across all `KosmoJS`-powered `Vue` applications.
 
 ## 🎨 The App Component
 
-`App.vue` acts as the root component for the entire application. It wraps all
-pages rendered by the router and provides a default `<Suspense>` boundary to
-handle async state gracefully.
+The default generated minimal `App.vue` acts as the root component for the entire application:
 
-```vue
+```vue [App.vue]
 <template>
-  <Suspense>
-    <template #default>
-      <RouterView />
-    </template>
-    <template #fallback>
-      <div>Loading...</div>
-    </template>
-  </Suspense>
+  <RouterView />
 </template>
 ```
 
@@ -38,35 +29,47 @@ layouts, navigation, or shared providers as your project grows.
 
 ## 🛣️ Router Configuration
 
-`router.ts` connects generated routes to `Vue Router` 4. It uses the configured
+`router.ts` connects generated routes to `Vue` Router 4. It uses the configured
 `baseurl` from the source folder's config to ensure correct path resolution.
 
 ```ts [router.ts]
-import { createRouter, createWebHistory, createMemoryHistory } from "vue-router";
+import type { App } from "vue";
+import {
+  type RouteRecordRaw,
+  createRouter,
+  createWebHistory,
+  createMemoryHistory,
+} from "vue-router";
 
-import { routes } from "@src/{vue}";
 import { baseurl } from "./config";
 
-export default async function AppRouter(ssrCtx?: { url: string }) {
+export default async (
+  app: App,
+  routes: Array<RouteRecordRaw>,
+  ssrProps?: { url: URL },
+) => {
   const router = createRouter({
-    history: ssrCtx ? createMemoryHistory(baseurl) : createWebHistory(baseurl),
+    history: ssrProps
+      ? createMemoryHistory(baseurl)
+      : createWebHistory(baseurl),
     routes,
   });
 
-  if (ssrCtx?.url) {
-    await router.push(ssrCtx.url.replace(baseurl, ""));
+  if (ssrProps?.url) {
+    await router.push(ssrProps.url.pathname);
     await router.isReady();
   }
 
+  app.use(router);
+
   return router;
-}
+};
 ```
 
 The `routes` value above is generated code that reflects your directory-based
 routing structure. We will explore that generated output in upcoming sections.
 
-Every page is rendered within `App.vue`, which provides the Suspense boundary
-shown earlier.
+Every page is rendered within `App.vue` - a shell for all your pages/components.
 
 ## 🎯 Client Entry Point
 
@@ -76,20 +79,24 @@ shown earlier.
 ```ts [entry/client.ts]
 import { createApp, createSSRApp } from "vue";
 
+import { routes, shouldHydrate } from "@src/{vue}/client";
 import App from "../App.vue";
 import createRouter from "../router";
-import { shouldHydrate } from "@vue/{vue}";
 
-if (shouldHydrate) {
-  const app = createSSRApp(App);
-  const router = await createRouter({ url: location.pathname });
-  app.use(router);
-  app.mount("#app", true);
+const root = document.getElementById("app");
+
+if (root) {
+  if (shouldHydrate) {
+    const app = createSSRApp(App);
+    await createRouter(app, routes);
+    app.mount(root, true);
+  } else {
+    const app = createApp(App);
+    await createRouter(app, routes);
+    app.mount(root);
+  }
 } else {
-  const app = createApp(App);
-  const router = await createRouter();
-  app.use(router);
-  app.mount("#app");
+  console.error("Root element not found!");
 }
 ```
 

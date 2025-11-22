@@ -1,13 +1,15 @@
 ---
 title: SolidJS - Routing
-description: Automatic route generation from pages directory with lazy-loaded components, preload functions, and SolidJS Router parameter syntax conversion from KosmoJS directory structure.
+description: Automatic route generation from pages directory with lazy-loaded components,
+    preload functions, and SolidJS Router parameter syntax conversion from KosmoJS directory structure.
 head:
   - - meta
     - name: keywords
-      content: solidjs routing, lazy loading, route parameters, preload function, dynamic imports, solidjs router config, route generation
+      content: solidjs routing, lazy loading, route parameters, preload function,
+        dynamic imports, solidjs router config, route generation
 ---
 
-The SolidJS generator continuously watches your `pages` directory for components.
+The `SolidJS` generator continuously watches your `pages/` directory for components.
 
 When you create a page component, the generator analyzes its location
 and creates a corresponding route configuration.
@@ -29,9 +31,7 @@ the generator creates a route configuration like this:
 }
 ```
 
-Notice several important characteristics of this generated route.
-
-The path uses SolidJS Router's parameter syntax (`:id` instead of `[id]`),
+The path uses `SolidJS` Router's parameter syntax (`:id` instead of `[id]`),
 automatically converting `KosmoJS`'s directory naming to the router's expectations.
 
 The component is lazy-loaded, which means it's not included in your initial bundle-
@@ -41,16 +41,9 @@ All components are lazy-loaded by default.
 This keeps initial bundle sizes small and improves application startup time.
 Users only download the code for routes they actually visit.
 
-While there could theoretically be an option to eagerly load certain critical routes,
-implementing this would require parsing each component's AST to detect configuration options.
-Importing components to check for options would defeat the purpose of lazy loading,
-so the generator takes the pragmatic approach of lazy-loading everything consistently.
-
 The route configuration also includes a preload function.
-If your page component exports a `preload` function,
-the router calls it in specific situations:
-when the component first loads, when users hover over links to that route,
-or when navigation to that route occurs.
+If your page component exports a `preload` function, the router calls it in specific situations:
+when the component first loads, when users hover over links to that route, or when navigation to that route occurs.
 
 This preloading improves perceived performance
 by fetching data before the component actually renders.

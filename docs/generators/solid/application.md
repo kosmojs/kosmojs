@@ -8,29 +8,26 @@ head:
       content: solidjs app structure, suspense boundary, solidjs router, app component, entry point, solidjs render, vite entry
 ---
 
-To establish a robust foundation, Solid generator produces a suite of core files.
+To establish a robust foundation, `Solid` generator produces a suite of core files.
 
 This infrastructure handles critical tasks like mapping your file structure to application routes,
 enabling type-safe navigation, and ensuring efficient code-splitting through lazy loading.
 
 ## 🎨 The App Component
 
-The generator creates `App.tsx` as your root application component.
-This component wraps your entire application and provides SolidJS's Suspense boundary:
+The generator creates a minimal `App.tsx` as your root application component.
 
 ```tsx [App.tsx]
-import { type ParentComponent, Suspense } from "solid-js";
+import type { ParentComponent } from "solid-js";
 
 const App: ParentComponent = (props) => {
-  return <Suspense>{props.children}</Suspense>;
+  return props.children;
 };
 
 export default App;
 ```
 
 This simple component serves as your application shell.
-The Suspense boundary allows child components to suspend during async operations
-like data fetching, showing fallback content until resources are ready.
 
 You can customize this component to add global layouts, error boundaries,
 or other application-wide concerns.
@@ -40,20 +37,30 @@ or other application-wide concerns.
 The `router.tsx` file connects `KosmoJS`'s generated routes to SolidJS Router:
 
 ```tsx [router.tsx]
-import { Router } from "@solidjs/router";
+import type { ParentComponent } from "solid-js";
+import { type RouteDefinition, Router } from "@solidjs/router";
 
-import { routes } from "@src/{solid}";
-
-import App from "./App";
 import { baseurl } from "./config";
 
-export default function AppRouter(ssrProps?: { url?: string }) {
+export default (
+  App: ParentComponent,
+  routes: Array<RouteDefinition>,
+  ssrProps?: { url?: URL },
+) => {
+  if (ssrProps?.url) {
+    return (
+      <Router root={App} base={baseurl} url={ssrProps.url.pathname}>
+        {routes}
+      </Router>
+    );
+  }
+
   return (
-    <Router root={App} base={baseurl} {...ssrProps}>
+    <Router root={App} base={baseurl}>
       {routes}
     </Router>
   );
-}
+};
 ```
 
 This configuration uses your source folder's `baseurl` from the config file,
@@ -63,7 +70,7 @@ The `routes` import comes from generated code in your `lib` directory,
 which we'll explore next.
 
 The Router uses your App component as the root,
-meaning every route renders within the App's Suspense boundary.
+meaning every route renders within the App's component.
 
 ## 🎯 The Entry Point
 
@@ -73,13 +80,19 @@ rendering your router into the DOM:
 ```tsx [entry/client.tsx]
 import { hydrate, render } from "solid-js/web";
 
-import { shouldHydrate } from "@src/{solid}";
-import Router from "../router";
+import { routes, shouldHydrate } from "@src/{solid}/client";
+import App from "../App";
+import createRouter from "../router";
 
 const root = document.getElementById("app");
 
 if (root) {
-  shouldHydrate ? hydrate(Router, root) : render(Router, root);
+  const router = createRouter(App, routes);
+  if (shouldHydrate) {
+    hydrate(() => router, root)
+  } else {
+    render(() => router, root);
+  }
 } else {
   console.error("Root element not found!");
 }
@@ -92,7 +105,7 @@ which `KosmoJS` creates when you initialize a source folder:
 <script type="module" src="./entry/client.tsx"></script>
 ```
 
-The `index.html` file serves as Vite's entry point.
+The `index.html` file serves as entry point.
 When `Vite` processes your application, it starts from this HTML file,
 follows the script import to `entry/client.tsx`,
 and builds your entire application graph from there.

@@ -36,8 +36,6 @@ this configuration:
   }
 ```
 
-Several characteristics merit attention in this generated structure.
-
 The generator performs automatic parameter syntax transformation, converting
 filesystem bracket notation (`[id]`) into `React Router`'s colon-prefix format
 (`:id`).
@@ -50,11 +48,6 @@ This universal lazy-loading approach yields significantly reduced initial
 payloads, accelerating application startup. Visitors download code selectively
 according to navigation patterns rather than receiving the complete
 application upfront.
-
-While eager loading might benefit high-priority routes, implementation would
-require sophisticated AST parsing to detect configuration markers within
-components. Since component imports would defeat lazy loading's purpose, the
-generator maintains consistent lazy loading across all routes.
 
 Route definitions incorporate loader functions automatically. When page
 components export `loader` functions, the router executes them at strategic

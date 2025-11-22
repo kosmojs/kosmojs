@@ -26,24 +26,16 @@ For example, if you create a page component at
 }
 ```
 
-Several important details are baked into this generated route.
-
-First, the path uses `Vue Router`'s parameter syntax (`:id` instead of `[id]`).
+The path uses `Vue` Router's parameter syntax (`:id` instead of `[id]`).
 The generator translates the directory-based convention that `KosmoJS` uses into
-the format `Vue Router` expects, so you can think in terms of folders while the
+the format `Vue` Router expects, so you can think in terms of folders while the
 router receives properly structured paths.
 
-Second, the component is lazy-loaded. It isn't bundled into the initial
+The component is lazy-loaded. It isn't bundled into the initial
 JavaScript payload; instead, it is loaded only when a user navigates to that
 route. By lazy-loading every page component by default, the initial bundle stays
 small and application startup times remain fast. Users download code only for
 the screens they actually visit.
-
-While it may eventually be helpful to support optional eager loading or
-route-specific preload behavior, those features require deeper integration with
-`Vue Router` and `Vue` component lifecycles. We are exploring the best approach for
-`Vue` developers - without increasing complexity or sacrificing bundle-splitting
-benefits.
 
 > ⚙️ Preload hooks, hover prefetching, and other advanced patterns are currently
 > under consideration for the `Vue` generator. If you're interested in helping
